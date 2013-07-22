@@ -1,0 +1,433 @@
+import math
+from time import sleep
+import pifacecommon
+
+
+LCD_PORT = pifacecommon.core.GPIOB
+
+# piface peripheral pin numbers
+# each peripheral is connected to an I/O pin
+# some pins are connected to many peripherals
+# outputs
+PH_PIN_D4 = 0
+LCD_D4 = 1
+PH_PIN_D5 = 1
+LCD_D5 = 2
+PH_PIN_D6 = 2
+LCD_D6 = 4
+PH_PIN_D7 = 3
+LCD_D7 = 8
+PH_PIN_ENABLE = 4
+LCD_E = 0x10
+PH_PIN_RW = 5
+LCD_RW = 0x20
+PH_PIN_RS = 6
+LCD_RS = 0x40
+PH_PIN_LED_EN = 7
+LCD_LED = 0x80
+
+# inputs
+PH_PIN_SWITCH_1 = 0
+PH_PIN_SWITCH_2 = 1
+PH_PIN_SWITCH_3 = 2
+PH_PIN_SWITCH_4 = 3
+
+PH_PIN_SWITCH_SELECT = 5
+PH_PIN_SWITCH_CW = 6
+PH_PIN_SWITCH_CCW = 7
+
+# commands
+LCD_CLEARDISPLAY = 0x01
+LCD_RETURNHOME = 0x02
+LCD_ENTRYMODESET = 0x04
+LCD_DISPLAYCONTROL = 0x08
+LCD_CURSORSHIFT = 0x10
+LCD_FUNCTIONSET = 0x20
+LCD_SETCGRAMADDR = 0x40
+LCD_SETDDRAMADDR = 0x80
+LCD_NEWLINE = 0xC0
+
+# flags for display entry mode
+LCD_ENTRYRIGHT = 0x00
+LCD_ENTRYLEFT = 0x02
+LCD_ENTRYSHIFTINCREMENT = 0x01
+LCD_ENTRYSHIFTDECREMENT = 0x00
+
+# flags for display on/off control
+LCD_DISPLAYON = 0x04
+LCD_DISPLAYOFF = 0x00
+LCD_CURSORON = 0x02
+LCD_CURSOROFF = 0x00
+LCD_BLINKON = 0x01
+LCD_BLINKOFF = 0x00
+
+# flags for display/cursor shift
+LCD_DISPLAYMOVE = 0x08
+LCD_CURSORMOVE = 0x00
+
+# flags for display/cursor shift
+LCD_DISPLAYMOVE = 0x08
+LCD_CURSORMOVE = 0x00
+LCD_MOVERIGHT = 0x04
+LCD_MOVELEFT = 0x00
+
+# flags for function set
+LCD_8BITMODE = 0x10
+LCD_4BITMODE = 0x00
+LCD_2LINE = 0x08
+LCD_1LINE = 0x00
+LCD_5x10DOTS = 0x04
+LCD_5x8DOTS = 0x00
+
+ROW_OFFSETS = [0x00, 0x40, 0x14, 0x54]
+
+LCD_MAX_LINES = 2
+LCD_WIDTH = 16
+LCD_RAM_WIDTH = 80
+
+# \ 1M for microseconds
+PULSE_DELAY = 0.45 / float(1000000)  # 1us - pulse width must be > 450ns
+SETTLE_DELAY = 37 / float(1000000)  # commands need 37us to settle
+CLEAR_DISPLAY_DELAY = 3000 / float(1000000)
+
+MAX_CUSTOM_BITMAPS = 8
+
+
+class PiFaceLCD(object):
+    def __init__(self):
+        self._cursor_position = [0, 0]
+        self._viewport_corner = 0  # top left corner
+
+        self.numrows = LCD_MAX_LINES
+        self.numcols = LCD_RAM_WIDTH
+
+        self.home()
+        self.clear()
+
+        self.displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT
+        self.update_entry_mode()
+
+        self.displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON
+        self.update_display_control()
+
+        self.displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS
+        self.update_function_set()
+
+    @property
+    def viewport_corner(self):
+        """The top left corner of the current viewport."""
+        return self._viewport_corner
+
+    @viewport_corner.setter
+    def viewport_corner(self, position):
+        delta = position - self._viewport_corner
+        if delta > 0:
+            for i in range(delta):
+                self.move_left()
+        elif delta < 0:
+            for i in range(abs(delta)):
+                self.move_right()
+        self._viewport_corner = position
+
+    def see_cursor(self, col=None):
+        """Moves the viewport so that the cursor is visible."""
+        if col is None:
+            col, row = self.get_cursor()
+
+        # if off screen, move screen
+        if col < self.viewport_corner:
+            self.viewport_corner = col
+        elif col > (self.viewport_corner + LCD_WIDTH - 1):
+            self.viewport_corner = col - (LCD_WIDTH - 1)
+
+    def clear(self):
+        """Clears the display."""
+        self.send_command(LCD_CLEARDISPLAY)  # command to clear display
+        # clearing the display takes a long time
+        sleep(CLEAR_DISPLAY_DELAY)
+        self._cursor_position = [0, 0]
+        self._viewport_corner = 0
+
+    def home(self):
+        """Moves the cursor to the home position."""
+        self.send_command(LCD_RETURNHOME)  # set cursor position to zero
+        sleep(CLEAR_DISPLAY_DELAY)
+        self._cursor_position = [0, 0]
+        self._viewport_corner = 0
+
+    # entry mode set
+    def update_entry_mode(self):
+        """Update entrymodeset to reflect the displaymode."""
+        self.send_command(LCD_ENTRYMODESET | self.displaymode)
+
+    def left_to_right(self):
+        """Sets the text to flow from left to right."""
+        self.displaymode |= LCD_ENTRYLEFT
+        self.update_entry_mode()
+
+    def right_to_left(self):
+        """Sets the text to flow from right to left."""
+        self.displaymode &= ~LCD_ENTRYLEFT
+        self.update_entry_mode()
+
+    def right_justify(self):
+        """Right justifies text from the cursor."""
+        self.displaymode |= LCD_ENTRYSHIFTINCREMENT
+        self.update_entry_mode()
+
+    def left_justify(self):
+        """Left justifies text from the cursor."""
+        self.displaymode &= ~LCD_ENTRYSHIFTINCREMENT
+        self.update_entry_mode()
+
+    # display control
+    def update_display_control(self):
+        """Update the display control to reflect the displaycontrol."""
+        self.send_command(LCD_DISPLAYCONTROL | self.displaycontrol)
+
+    def display_off(self):
+        """Turns the display off (quickly)."""
+        self.displaycontrol &= ~LCD_DISPLAYON
+        self.update_display_control()
+
+    def display_on(self):
+        """Turns the display on (quickly)."""
+        self.displaycontrol |= LCD_DISPLAYON
+        self.update_display_control()
+
+    def cursor_off(self):
+        """Turns the underline cursor off."""
+        self.displaycontrol &= ~LCD_CURSORON
+        self.update_display_control()
+
+    def cursor_on(self):
+        """Turns the underline cursor on."""
+        self.displaycontrol |= LCD_CURSORON
+        self.update_display_control()
+
+    def blink_off(self):
+        """Turns off the blinking cursor."""
+        self.displaycontrol &= ~LCD_BLINKON
+        self.update_display_control()
+
+    def blink_on(self):
+        """Turns on the blinking cursor."""
+        self.displaycontrol |= LCD_BLINKON
+        self.update_display_control()
+
+    # cursor or display shift
+    def move_left(self):
+        """Scrolls the display without changing the RAM."""
+        self.send_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT)
+        self._viewport_corner += 1
+
+    def move_right(self):
+        """Scrolls the display without changing the RAM."""
+        self.send_command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT)
+        self._viewport_corner -= 1
+
+    # function set
+    def update_function_set(self):
+        """Updates the function set to reflect the current displayfunction."""
+        self.send_command(LCD_FUNCTIONSET | self.displayfunction)
+
+    # cgram address set
+    def set_cgram_address(self, address=0):
+        """Start using CGRAM at the given address.
+
+        :param address: The address to start at (default: 0)
+        :type address: int
+        """
+        self.send_command(LCD_SETCGRAMADDR | address)
+
+    # ddram address set
+    def set_ddram_address(self, address=None):
+        """Start using DDRAM at the given address.
+
+        :param address: The address to start at (default: current)
+        :type address: int
+        """
+        if address is None:
+            col, row = self.get_cursor()
+            address = self.colrow2address(col, row)
+        self.send_command(LCD_SETDDRAMADDR | address)
+
+    def set_cursor(self, col, row):
+        """Places the cursor at the specified column and row.
+
+        :param col: The column.
+        :type col: int
+        :param row: The row.
+        :type row: int
+        """
+        if col == 0 and row == 1:
+            self.send_command(LCD_NEWLINE)
+        else:
+            col = max(0, min(col, self.numcols - 1))
+            row = max(0, min(row, self.numrows - 1))
+            self.set_ddram_address(self.colrow2address(col, row))
+        self._cursor_position = [col, row]
+
+    def get_cursor(self):
+        """Returns the current column and row of the cursor. Also fixes
+        internal value.
+
+        :returns: (int, int) -- A tuple containing the column and row.
+        """
+        fixed_col = self._cursor_position[0] % LCD_RAM_WIDTH
+        fixed_row = self._cursor_position[1] + \
+            math.floor(self._cursor_position[0] / LCD_RAM_WIDTH)
+
+        self._cursor_position[0] = fixed_col
+        self._cursor_position[1] = fixed_row
+
+        return (fixed_col, fixed_row)
+
+    def colrow2address(self, col, row):
+        """Returns address of column and row.
+
+        :param col: The column.
+        :param col: int
+        :param row: The row.
+        :param row: int
+        :returns: The address of the column and row.
+        """
+        return col + ROW_OFFSETS[int(row)]
+
+    # backlight
+    def backlight_on(self):
+        """Turn on the backlight."""
+        pifacecommon.core.write_bit(True, PH_PIN_LED_EN, LCD_PORT)
+
+    def backlight_off(self):
+        """Turn on the backlight."""
+        pifacecommon.core.write_bit(False, PH_PIN_LED_EN, LCD_PORT)
+
+    # send commands/characters
+    def send_command(self, command):
+        """Send command byte to LCD.
+
+        :param command: The command byte to be sent.
+        :type command: int
+        """
+        pifacecommon.core.write_bit(False, PH_PIN_RS, LCD_PORT)
+        self.send_byte(command)
+        sleep(SETTLE_DELAY)
+
+    def send_data(self, data):
+        """Send data byte to LCD.
+
+        :param data: The data byte to be sent.
+        :type data: int
+        """
+        pifacecommon.core.write_bit(True, PH_PIN_RS, LCD_PORT)
+        self.send_byte(data)
+        sleep(SETTLE_DELAY)
+
+    def send_byte(self, b):
+        """Send byte to LCD. Each nibble is sent individually followed by a
+        clock pulse.
+
+        :param b: The byte to send.
+        :type b: int
+        """
+        # send first nibble (0bXXXX0000)
+        current_byte = pifacecommon.core.read(LCD_PORT)
+        new_byte = current_byte & 0xF0  # clear nibble
+        new_byte |= (b >> 4) & 0xF  # set nibble
+        #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
+        pifacecommon.core.write(new_byte, LCD_PORT)
+        self.pulse_clock()
+
+        # send second nibble (0b0000XXXX)
+        current_byte = pifacecommon.core.read(LCD_PORT)
+        new_byte = current_byte & 0xF0  # clear nibble
+        new_byte |= b & 0xF  # set nibble
+        #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
+        pifacecommon.core.write(new_byte, LCD_PORT)
+        self.pulse_clock()
+
+    def pulse_clock(self):
+        """Pulse the LCD clock for reading data."""
+        pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        sleep(PULSE_DELAY)
+        pifacecommon.core.write_bit(True, PH_PIN_ENABLE, LCD_PORT)
+        sleep(PULSE_DELAY)
+        pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        sleep(PULSE_DELAY)
+
+    def write(self, text):
+        """Writes a string to the LCD screen.
+
+        :param text: The text that will be written.
+        :type text: string
+        """
+        self.set_ddram_address()
+        for char in text:
+            if '\n' in char:
+                self.set_cursor(0, 1)
+            else:
+                self.send_data(ord(char))
+                self._cursor_position[0] += 1  # LCD auto increments
+
+    def write_custom_bitmap(self, char_bank, bitmap=None):
+        """Writes the custom bitmap in CGRAM stored at char_bank. If a
+        LCDBitmap is given, store it in the CGRAM address char_bank and then
+        write it to the screen.
+
+        :param char_bank: The bitmap bank to write the bitmap from
+            (max: {max_custom_bitmaps})
+        :type char_bank: int
+        :param bitmap: The bitmap to store in the CGRAM address and write.
+        :type bitmap: :class:`LCDBitmap`
+        :raises: pifacecommon.core.RangeError
+        """.format(max_custom_bitmaps=MAX_CUSTOM_BITMAPS)
+
+        self.char_bank_in_range_or_error(char_bank)
+        if bitmap is not None:
+            self.store_custom_bitmap(char_bank, bitmap)
+        col, row = self.get_cursor()  # start using the correct ddram address
+        self.set_cursor(col, row)
+        self.send_data(char_bank)
+        self._cursor_position[0] += 1  # LCD auto increments
+
+    def store_custom_bitmap(self, char_bank, bitmap):
+        """Stores a custom bitmap bitmap at char_bank.
+
+        :param char_bank: The CGRAM address to use.
+        :type char_bank: int
+        :param bitmap: The bitmap to store.
+        :type bitmap: :class:`LCDBitmap`
+        """
+        self.char_bank_in_range_or_error(char_bank)
+        self.set_cgram_address(char_bank*8)
+        for line in bitmap:
+            self.send_data(line)
+
+    def char_bank_in_range_or_error(self, char_bank):
+        """Raises an exception if char_bank is out of bounds. Returns True
+        otherwise.
+
+        :param char_bank: The address to check.
+        :type char_bank: int
+        """
+        if char_bank >= MAX_CUSTOM_BITMAPS or \
+                char_bank < 0:
+            raise pifacecommon.core.RangeError(
+                "There are only {max} custom characters (You tried to access "
+                "{cgramaddr}).".format(
+                    max=MAX_CUSTOM_BITMAPS,
+                    cgramaddr=char_bank,
+                )
+            )
+        else:
+            return True
+
+
+class LCDBitmap(bytearray):
+    """A custom bitmap for the LCD screen."""
+    # TODO: More efficiend to store this sideways (LCDchar: 5x8, Bitmap: 8x...)
+    def __init__(self, lines=list()):
+        super().__init__(self)
+        for line in lines:
+            self.append(line)

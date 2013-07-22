@@ -1,0 +1,76 @@
+begin
+  remote = *
+  button = 0
+  prog = pifacecadtest
+  config = 0
+end
+
+begin
+  remote = *
+  button = 1
+  prog = pifacecadtest
+  config = 1
+end
+
+begin
+  remote = *
+  button = 2
+  prog = pifacecadtest
+  config = 2
+end
+
+begin
+  remote = *
+  button = 3
+  prog = pifacecadtest
+  config = 3
+end
+
+begin
+  remote = *
+  button = 4
+  prog = pifacecadtest
+  config = 4
+end
+
+begin
+  remote = *
+  button = 5
+  prog = pifacecadtest
+  config = 5
+end
+
+begin
+  remote = *
+  button = 6
+  prog = pifacecadtest
+  config = 6
+end
+
+begin
+  remote = *
+  button = 7
+  prog = pifacecadtest
+  config = 7
+end
+
+begin
+  remote = *
+  button = 8
+  prog = pifacecadtest
+  config = 8
+end
+
+begin
+  remote = *
+  button = 9
+  prog = pifacecadtest
+  config = 9
+end
+
+begin
+  remote = *
+  button = V.+
+  prog = pifacecadtest
+  config = V.+
+end
