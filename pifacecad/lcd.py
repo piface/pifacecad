@@ -428,6 +428,6 @@ class LCDBitmap(bytearray):
     """A custom bitmap for the LCD screen."""
     # TODO: More efficiend to store this sideways (LCDchar: 5x8, Bitmap: 8x...)
     def __init__(self, lines=list()):
-        super().__init__(self)
+        super(LCDBitmap, self).__init__(self)
         for line in lines:
             self.append(line)

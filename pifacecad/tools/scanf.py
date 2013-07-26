@@ -1,7 +1,27 @@
+import sys
 import math
 from abc import ABCMeta
-import pifacecommon
+import threading
 import pifacecad
+
+
+# Python 2 barrier hack (if you know a better way, please tell me)
+PY3 = sys.version_info.major >= 3
+if not PY3:
+    from time import sleep
+
+    class Barrier(object):
+        def __init__(self, n, timeout=None):
+            self.count = 0
+            self.n = n
+            self.timeout = timeout
+
+        def wait(self):
+            self.count += 1
+            while self.count < self.n:
+                sleep(0.0001)
+
+    threading.Barrier = Barrier
 
 
 # charset from http://mil.ufl.edu/4744/docs/lcdmanual/charset.gif
@@ -73,6 +93,7 @@ class LCDScanf(object):
         self.cad = cad
         self.display_string = ValueSelectString(format, custom_values)
         self.mode = self.ScanfMode.select
+        self.wait_for_return_string = None
 
     def __del__(self):
         if not self.custom_cad:
@@ -109,45 +130,43 @@ class LCDScanf(object):
             self.cad.lcd.display_on()
 
         # wait for user input
-        ifm = pifacecommon.InputFunctionMap()
+        listener = pifacecad.SwitchEventListener()
+        listener.register(7, pifacecad.IODIR_ON, self.right_event)
+        listener.register(6, pifacecad.IODIR_ON, self.left_event)
+        listener.register(5, pifacecad.IODIR_ON, self.change_mode_event)
+        listener.register(4, pifacecad.IODIR_ON, self.return_string_event)
 
-        def right(flag, byte):
-            if self.mode == self.ScanfMode.select:
-                self.move_cursor_right()
-            elif self.mode == self.ScanfMode.edit:
-                self.increment_value()
-            return True
-
-        def left(flag, byte):
-            if self.mode == self.ScanfMode.select:
-                self.move_cursor_left()
-            elif self.mode == self.ScanfMode.edit:
-                self.decrement_value()
-            return True
-
-        def change_mode(flag, byte):
-            col, row = self.cad.lcd.get_cursor()
-            if isinstance(
-                    self.display_string.value_at(col-self.start_offset[0]),
-                    ReturnCharacter):
-                return False
-            elif self.mode == self.ScanfMode.select:
-                self.mode = self.ScanfMode.edit
-                return True
-            elif self.mode == self.ScanfMode.edit:
-                self.mode = self.ScanfMode.select
-                return True
-
-        def return_string(flag, byte):
-            return False
-
-        bdir = pifacecommon.IN_EVENT_DIR_ON
-        ifm.register(input_num=7, direction=bdir, callback=right)
-        ifm.register(input_num=6, direction=bdir, callback=left)
-        ifm.register(input_num=5, direction=bdir, callback=change_mode)
-        ifm.register(input_num=4, direction=bdir, callback=return_string)
-        pifacecad.wait_for_input(ifm)
+        self.wait_for_return_string = threading.Barrier(2)
+        listener.activate()
+        self.wait_for_return_string.wait()
+        listener.deactivate()
         return self.display_string.selected_values
+
+    def right_event(self, event):
+        if self.mode == self.ScanfMode.select:
+            self.move_cursor_right()
+        elif self.mode == self.ScanfMode.edit:
+            self.increment_value()
+
+    def left_event(self, event):
+        if self.mode == self.ScanfMode.select:
+            self.move_cursor_left()
+        elif self.mode == self.ScanfMode.edit:
+            self.decrement_value()
+
+    def change_mode_event(self, event):
+        col, row = self.cad.lcd.get_cursor()
+        if isinstance(
+                self.display_string.value_at(col-self.start_offset[0]),
+                ReturnCharacter):
+            self.return_string_event(event)
+        elif self.mode == self.ScanfMode.select:
+            self.mode = self.ScanfMode.edit
+        elif self.mode == self.ScanfMode.edit:
+            self.mode = self.ScanfMode.select
+
+    def return_string_event(self, event):
+        self.wait_for_return_string.wait()
 
     def move_cursor_right(self):
         """move cursor right, roll around string, scroll screen.
