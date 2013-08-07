@@ -1,5 +1,10 @@
-# doc builds
+dpkg-files
+makedebpkg.sh
+*.deb
 _build
+*.log
+MANIFEST
+deb_dist
 
 # databases
 *.db
@@ -16,6 +21,7 @@ dist
 build
 eggs
 parts
+bin
 var
 sdist
 develop-eggs

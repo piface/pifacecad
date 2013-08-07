@@ -18,7 +18,7 @@ LIRC looks something like this:
 Setting up the Infrared Receiver
 ================================
 
-.. note:: This is handled by the install script. If you are installing
+.. note:: This is handled by the installer. If you are installing
    pifacecad then you can skip this section.
 
 First, install lirc::
@@ -84,10 +84,10 @@ See also: http://www.lirc.org/html/configure.html
 lirc.conf
 ---------
 
-The /etc/lirc/lirc.conf file tells LIRC about your remote control. Since every
+The ``/etc/lirc/lirc.conf`` file tells LIRC about your remote control. Since every
 remote control is different, you need to generate a different config for each
 remote. Alternatively you could try and find your remote control config file
-`here <http://lirc.sourceforge.net/remotes/>`_.
+here: http://lirc.sourceforge.net/remotes/.
 
 To generate your own configuration run::
 
@@ -95,7 +95,7 @@ To generate your own configuration run::
 
 and carefully follow the on-screen instructions. At some point it will ask you
 to enter the commands for each button you press. You can list the available
-commands with::
+commands (in another terminal) with::
 
     $ irrecord --list-namespace
 
@@ -109,11 +109,12 @@ Your commands should appear in the console.
 ~/.lircrc (or /etc/lirc/lircrc)
 -------------------------------
 
-The ``~/.lircrc`` (``home/pi/.lircrc`` on a Raspberry Pi) file is used
-to configure what other programs see from LIRC.
+The ``~/.lircrc`` file is used to configure what other programs see from LIRC.
+See examples in :ref:`ref-irexec` and :ref:`ref-python-lirc`.
 
 See also: http://www.lirc.org/html/configure.html#lircrc_format
 
+.. _ref-irexec:
 
 irexec
 ======
@@ -158,6 +159,8 @@ Here is another example that uses ``mpc`` to control `Music Player Daemon
         config = mpc play
         repeat = 1
     end
+
+.. _ref-python-lirc:
 
 python-lirc
 ===========

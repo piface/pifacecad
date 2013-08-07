@@ -85,7 +85,10 @@ def init():
     # set port B as outputs
     pifacecommon.core.write(0, pifacecommon.core.IODIRB)
 
+    pifacecommon.interrupts.enable_interrupts(INPUT_PORT)
+
 
 def deinit():
     """Deitialises the PiFace CAD board."""
+    pifacecommon.interrupts.disable_interrupts(INPUT_PORT)
     pifacecommon.core.deinit()

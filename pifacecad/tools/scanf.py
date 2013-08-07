@@ -6,7 +6,7 @@ import pifacecad
 
 
 # Python 2 barrier hack (if you know a better way, please tell me)
-PY3 = sys.version_info.major >= 3
+PY3 = sys.version_info[0] >= 3
 if not PY3:
     from time import sleep
 

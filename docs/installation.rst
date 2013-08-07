@@ -2,14 +2,18 @@
 Installation
 ############
 
-To install pifacecad with minimal fuss::
+Download the latest debian package from
+`here <https://github.com/piface/pifacecad/releases>`_ and install with:
 
-    $ git clone https://github.com/piface/pifacecad.git
-    $ cd pifacecad
-    $ sudo python3 setup.py install
+.. parsed-literal::
 
-Then reboot.
+    $ sudo dpkg -i python3-pifacecad\_\ |version|-1_all.deb
 
-You can also get pifacecad from PyPi::
 
-    $ sudo easy_install3 pifacecad
+You may also need to download and install the latest releases of:
+
+- `pifacecommon <https://github.com/piface/pifacecommon/releases>`_
+- `python-lirc <https://github.com/tompreston/python-lirc/releases>`_
+  (Python 3 support for LIRC)
+
+.. note:: Python 2 users will want to use python-pifacecad\_\ |version|-1_all.deb.

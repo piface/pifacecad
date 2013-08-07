@@ -1,9 +1,38 @@
-import pifacecommon
+import sys
+import threading
 import pifacecad
+
+# Python 2 barrier hack (if you know a better way, please tell me)
+PY3 = sys.version_info[0] >= 3
+if not PY3:
+    from time import sleep
+
+    class Barrier(object):
+        def __init__(self, n, timeout=None):
+            self.count = 0
+            self.n = n
+            self.timeout = timeout
+
+        def wait(self):
+            self.count += 1
+            while self.count < self.n:
+                sleep(0.0001)
+
+    threading.Barrier = Barrier
 
 
 class LCDQuestion(object):
-    """Asks a question on the LCD"""
+    """Asks a question on the LCD"
+
+    :param question: The question to be asked.
+    :type question: string
+    :param answers: The answers to choose from.
+    :type answers: list
+    :param selector: The selector displayed in front of each answer.
+    :type selector: string
+    :param cad: An already initialised PiFaceCAD object.
+    :type cad: PiFaceCAD
+    """
     def __init__(self, question, answers, selector=">", cad=None):
         self.question = question
         self.answers = answers
@@ -19,11 +48,12 @@ class LCDQuestion(object):
         self.cad = cad
 
         self._displayed_answer_index = 0
+        self.wait_for_return_string = None
 
     def ask(self):
         """Asks the question using the LCD screen.
-        Returns the index of the answer selected.
-        Uses a new PiFacecad object (backlight on) if none provided.
+
+        :returns: int -- index of the answer selected.
         """
         self.cad.lcd.clear()
         self.cad.lcd.write(self.question)
@@ -31,42 +61,26 @@ class LCDQuestion(object):
         self.cad.lcd.display_on()
 
         # wait for user input
-        ifm = pifacecommon.InputFunctionMap()
+        listener = pifacecad.SwitchEventListener()
+        listener.register(7, pifacecad.IODIR_ON, next_answer)
+        listener.register(6, pifacecad.IODIR_ON, previous_answer)
+        listener.register(5, pifacecad.IODIR_ON, select_answer_switch_pressed)
+        listener.activate()
 
-        def next_answer_switch_pressed(flag, byte):
-            self.next_answer()
-            return True
-
-        def prev_answer_switch_pressed(flag, byte):
-            self.previous_answer()
-            return True
-
-        def select_answer_switch_pressed(flag, byte):
-            return False
-
-        ifm.register(
-            input_num=7,
-            direction=pifacecommon.IN_EVENT_DIR_ON,
-            callback=next_answer_switch_pressed
-        )
-        ifm.register(
-            input_num=6,
-            direction=pifacecommon.IN_EVENT_DIR_ON,
-            callback=prev_answer_switch_pressed
-        )
-        ifm.register(
-            input_num=5,
-            direction=pifacecommon.IN_EVENT_DIR_ON,
-            callback=select_answer_switch_pressed
-        )
-        pifacecad.wait_for_input(ifm)
+        self.wait_for_return_string = threading.Barrier(2)
+        listener.activate()
+        self.wait_for_return_string.wait()
+        listener.deactivate()
         return self._displayed_answer_index
 
-    def next_answer(self):
+    def select_answer_switch_pressed(self, event):
+        self.wait_for_return_string.wait()
+
+    def next_answer(self, event=None):
         answer_index = (self._displayed_answer_index + 1) % len(self.answers)
         self.change_answer(answer_index)
 
-    def previous_answer(self):
+    def previous_answer(self, event=None):
         answer_index = (self._displayed_answer_index - 1) % len(self.answers)
         self.change_answer(answer_index)
 

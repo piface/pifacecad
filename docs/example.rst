@@ -2,7 +2,7 @@
 Examples
 ########
 
-.. note:: Remember to use ``python3``.
+.. note:: Subtitute ``python3`` for ``python`` if you want to use Python 2.
 
 Basic usage
 ===========
@@ -18,21 +18,16 @@ Playing with PiFace Control and Display::
     >>> cad.lcd.backlight_on()         # turns the backlight on
     >>> cad.lcd.write("Hello, world!") # writes hello world on to the LCD
     >>>
-    >>> cad.switches[0].value  # reads the value of switch 0
+    >>> cad.switches[3].value  # reads the value of switch 3
     1
-    >>> cad.switch_port.value
+    >>> cad.switch_port.value  # reads the value of the switch port
+    4
 
 
 IR Receiver
 ===========
 
-.. warning:: Similar to interrupts, this is subject to change (I'm not totally
-   happy with this implementation - should be using threads and stuff).
-
-.. todo:: link to example config
-
-You first need to define which IR codes are available to your program in your
-~/.lircrc::
+You need to add your LIRC client (your program) to ~/.lircrc::
 
     $ cat ~/.lircrc
     begin
@@ -47,52 +42,63 @@ You first need to define which IR codes are available to your program in your
       config = two
     end
 
-
-Then you define a function you want to run, register it and then call
-:func:`pifacecad.wait_for_ir`::
+Then, register IR codes to functions using :class:`IREventListener`::
 
     >>> import pifacecad
     >>> pifacecad.init()
 
-    >>> def print_ir_code(ir_code):
-    ...     print(ir_code)
-    ...     return True  # keep waiting
+    >>> def print_ir_code(event):
+    ...     print(event.ir_code)
     ...
-    >>> ifm = pifacecad.IRFunctionMap()
-    >>> ifm.register(ir_code="one", callback=print_ir_code)
+    >>> listener = pifacecad.IREventListener(prog="pifacecadexample")
+    >>> listener.register('one', print_ir_code)
+    >>> listener.register('two', print_ir_code)
+    >>> listener.activate()
 
-    >>> pifacecad.wait_for_ir(ir_func_map=ifm, prog="pifacecadexample")
-
-Now when you press 1 on your remote, "one" is printed to the screen.
+Now when you press 1 or 2 on your remote, "one" or "two" is printed.
 
 Interrupts
 ==========
 
-A poor way of checking the inputs for activity is to periodically poll them. A
-better way is to register tasks you would like to be completed when the input
-event occurs.
+Instead of polling the switches we can use the :class:`SwitchEventListener` to
+register actions that we wish to be called on certain switch events.
 
-.. warning:: Interrupts are subject to change (I'm not totally happy with this
-   implementation - should be using threads and stuff).
-
-We're going to use :class:`pifacecommon.interrupts.InputFunctionMap`::
-
-    >>> import pifacecommon
     >>> import pifacecad
-
     >>> pifacecad.init()
     >>> cad = pifacecad.PiFaceCAD()
-
-    >>> def write_hello(flag, state):
-    ...     cad.lcd.write("Hello")
-    ...     return True  # keep waiting for interrupts
+    >>> cad.lcd.write("You pressed: ")
+    >>> def update_pin_text(event):
+    ...     cad.lcd.set_cursor(13, 0)
+    ...     cad.lcd.write(str(event.pin_num))
     ...
+    >>> listener = pifacecad.SwitchEventListener()
+    >>> for i in range(8):
+    ...     listener.register(i, pifacecad.IODIR_ON, update_pin_text)
+    >>> listener.activate()
 
-    >>> # when switch 0 is pressed, run write_hello
-    >>> ifm = pifacecommon.InputFunctionMap()
-    >>> ifm.register(
-            input_num=0,
-            direction=pifacecommon.IN_EVENT_DIR_ON,
-            callback=write_hello)
+The screen should update as buttons are pressed. To stop the listener, call
+it's ``deactivate`` method:
 
-    >>> pifacecad.wait_for_input(ifm)
+    >>> listener.deactivate()
+
+The :class:`Event` object has some interesting attributes. You can access them
+like so::
+
+    >>> import pifacecad
+    >>> pifacecad.init()
+    >>> def print_event_info(event):
+    ...     print("Flag:     ", bin(event.interrupt_flag))
+    ...     print("Capture:  ", bin(event.interrupt_capture))
+    ...     print("Pin num:  ", event.pin_num)
+    ...     print("Direction:", event.direction)
+    ...
+    >>> listener = pifacecad.SwitchEventListener()
+    >>> listener.register(0, pifacecad.IODIR_OFF, print_event_info)
+    >>> listener.activate()
+
+This would print out the event informaion whenever you unpress switch 0::
+
+    Flag:      0b00000001
+    Capture:   0b11111110
+    Pin num:   0
+    Direction: 1
