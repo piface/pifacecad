@@ -2,8 +2,6 @@
 Examples
 ########
 
-.. note:: Subtitute ``python3`` for ``python`` if you want to use Python 2.
-
 Basic usage
 ===========
 

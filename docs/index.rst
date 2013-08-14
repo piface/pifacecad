@@ -33,7 +33,6 @@ Contents:
    reference
    reference_tools
 
-
 Indices and tables
 ==================
 

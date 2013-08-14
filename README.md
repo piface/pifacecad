@@ -11,6 +11,9 @@ Documentation
 
 [http://piface.github.io/pifacecad/](http://piface.github.io/pifacecad/)
 
+You can also find the documentation and some examples installed at:
+
+    /usr/share/doc/python3-pifacecad/
 
 Install
 =======
@@ -26,13 +29,8 @@ You may need to download and install the latest releases of:
 - [python-lirc](https://github.com/tompreston/python-lirc/releases)
   (Python 3 support for LIRC)
 
-You might also need to reboot.
+You will also need to [configure the IR Receiver](http://piface.github.io/pifacecad/lirc.html#setting-up-the-infrared-receiver) and reboot.
 
-Or you can install without using your package manager:
+Test by running the ``sysinfo.py`` program:
 
-    $ git clone https://github.com/piface/pifacecad.git
-    $ cd pifacecad/
-    $ sudo python3 setup.py install
-    $ bin/post-installation.sh
-
-*Replace `python3` for `python` if you're using Python 2.*
+    python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py

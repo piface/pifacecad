@@ -9,10 +9,11 @@
 ### END INIT INFO
 
 LOCKFILE="/var/lock/pifacecad_status_service.lock"
+SYSINFO_FILE="/usr/share/doc/python3-pifacecad/examples/sysinfo.py"
 
 start() {
         echo -n "Starting PiFace CAD status service: "
-        /usr/bin/python3 /usr/local/bin/pifacecadsysinfo.py &
+        /usr/bin/python3 $SYSINFO_FILE &
         ### Create the lock file ###
         echo $! > $LOCKFILE
         status
@@ -25,7 +26,7 @@ stop() {
         # Now, delete the lock file ###
         rm -f $LOCKFILE
         # clean up the screen
-        /usr/bin/python3 /usr/local/bin/pifacecadsysinfo.py clear &
+        /usr/bin/python3 $SYSINFO_FILE clear &
         status
 }
 

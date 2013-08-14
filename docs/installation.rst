@@ -9,11 +9,32 @@ Download the latest debian package from
 
     $ sudo dpkg -i python3-pifacecad\_\ |version|-1_all.deb
 
+.. note:: Python 2 users will want to use python-pifacecad\_\ |version|-1_all.deb.
 
 You may also need to download and install the latest releases of:
 
 - `pifacecommon <https://github.com/piface/pifacecommon/releases>`_
 - `python-lirc <https://github.com/tompreston/python-lirc/releases>`_
-  (Python 3 support for LIRC)
+  Python 3 support for LIRC. Be sure to install the correct architecture
+  (**armhf** for a Raspberry Pi).
 
-.. note:: Python 2 users will want to use python-pifacecad\_\ |version|-1_all.deb.
+Test by running the ``sysinfo.py`` program::
+
+    $ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
+
+You will need to `configure the IR receiver <lirc.html#setting-up-the-infrared-receiver>`_ yourself.
+
+SysInfo Service
+===============
+
+You can run `sysinfo` as a service using::
+
+    $ sudo service pifacecadsysinfo start
+
+You can stop the service with::
+
+    $ sudo service pifacecadsysinfo stop
+
+You can enable the service to run at boot (handy for headless Raspberry Pi's)::
+
+    $ sudo update-rc.d pifacecadsysinfo enable

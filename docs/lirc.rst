@@ -18,9 +18,6 @@ LIRC looks something like this:
 Setting up the Infrared Receiver
 ================================
 
-.. note:: This is handled by the installer. If you are installing
-   pifacecad then you can skip this section.
-
 First, install lirc::
 
     $ sudo apt-get install lirc
