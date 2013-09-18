@@ -4,6 +4,12 @@ import sys
 import re
 import itertools
 import threading
+
+PY3 = sys.version_info[0] >= 3
+if not PY3:
+    print("Train Times only works with `python3`.")
+    sys.exit(1)
+
 import urllib.request
 from time import sleep
 from bs4 import BeautifulSoup

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 from time import sleep
 from random import randint

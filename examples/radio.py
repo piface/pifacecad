@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
+# requires `mplayer` to be installed
 from time import sleep
 import os
+import sys
 import signal
 import shlex
 import math
+import lirc
+
+PY3 = sys.version_info[0] >= 3
+if not PY3:
+    print("Radio only works with `python3`.")
+    sys.exit(1)
+
 from threading import Barrier  # must be using Python 3
 import subprocess
 import pifacecommon
@@ -97,7 +106,7 @@ class Radio(object):
         self.playing_process = subprocess.Popen(
             play_command,
             #stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            #stderr=subprocess.PIPE,
             shell=True,
             preexec_fn=os.setsid)
         self._is_playing = True
@@ -171,6 +180,18 @@ def radio_preset_ir(event):
 
 
 if __name__ == "__main__":
+    # test for mpalyer
+    try:
+        subprocess.call(["mplayer"], stdout=open('/dev/null'))
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            print(
+                "MPlayer was not found, install with "
+                "`sudo apt-get install mplayer`")
+            sys.exit(1)
+        else:
+            raise  # Something else went wrong while trying to run `mplayer`
+
     pifacecad.init()
 
     global radio
@@ -199,11 +220,19 @@ if __name__ == "__main__":
         irlistener.register(str(i), radio_preset_ir)
 
     switchlistener.activate()
-    irlistener.activate()
+    try:
+        irlistener.activate()
+    except lirc.InitError:
+        print("Could not initialise IR, radio running without IR contorls.")
+        irlistener_activated = False
+    else:
+        irlistener_activated = True
+
     end_barrier.wait()  # wait unitl exit
 
     # exit
     radio.close()
     switchlistener.deactivate()
-    irlistener.deactivate()
+    if irlistener_activated:
+        irlistener.deactivate()
     pifacecad.deinit()

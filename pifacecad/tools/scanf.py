@@ -223,7 +223,7 @@ class LCDScanf(object):
 class ValueSelect(list):
     """A character in a specified range"""
     def __init__(self, values=list(), value_index=0):
-        super().__init__(values)
+        super(ValueSelect, self).__init__(values)
         self.value_index = value_index
 
     def __str__(self):
@@ -264,17 +264,20 @@ class ValueSelect(list):
 
 class CharacterValueSelect(ValueSelect):
     def __init__(self):
-        super().__init__([c for c in char_range("a", "z")])
+        super(CharacterValueSelect, self).__init__(
+            [c for c in char_range("a", "z")])
 
 
 class CapsCharacterValueSelect(ValueSelect):
     def __init__(self):
-        super().__init__([c for c in char_range("A", "Z")])
+        super(CapsCharacterValueSelect, self).__init__(
+            [c for c in char_range("A", "Z")])
 
 
 class PunctuationValueSelect(ValueSelect):
     def __init__(self):
-        super().__init__([p for p in LCD_PUNC_CHARSET])
+        super(PunctuationValueSelect, self).__init__(
+            [p for p in LCD_PUNC_CHARSET])
 
 
 class NumericValue(object):
@@ -290,13 +293,13 @@ class NumericValue(object):
 
 class IntegerValueSelect(ValueSelect, NumericValue):
     def __init__(self):
-        super().__init__([i for i in range(10)])
+        super(IntegerValueSelect, self).__init__([i for i in range(10)])
         self.base = 10
 
 
 class HexadecimalValueSelect(ValueSelect, NumericValue):
     def __init__(self):
-        super().__init__(
+        super(HexadecimalValueSelect, self).__init__(
             [numeric for numeric in range(10)] +
             [alpha for alpha in char_range('A', 'F')]
         )
@@ -305,7 +308,7 @@ class HexadecimalValueSelect(ValueSelect, NumericValue):
 
 class ReturnCharacter(ValueSelect):
     def __init__(self):
-        super().__init__()
+        super(ReturnCharacter, self).__init__()
         self.append(LCD_RETURN_CHAR)
 
 
@@ -316,7 +319,7 @@ class MultiValueSelect(list):
             x = [value_select(custom_values) for i in range(multiplier)]
         else:
             x = [value_select() for i in range(multiplier)]
-        super().__init__(x)
+        super(MultiValueSelect, self).__init__(x)
 
     def __str__(self):
         return str(self.value)
@@ -341,7 +344,7 @@ class MultiValueSelect(list):
 class ValueSelectString(list):
     """A list of ValueSelect's and characters, representing a string."""
     def __init__(self, format, custom_values=None):
-        super().__init__()
+        super(ValueSelectString, self).__init__()
         self.format = format
         self.values = list()  # lists of value selects representing a value
 

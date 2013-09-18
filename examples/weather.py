@@ -6,6 +6,12 @@ you. Click on a temperature bubble for that area. When the window pops up,
 click on hypertext link with the station ID, then on the bottom right of the
 page, click on the Current Conditions XML. Thats your link! Good luck!
 """
+
+PY3 = sys.version_info[0] >= 3
+if not PY3:
+    print("Weather only works with `python3`.")
+    sys.exit(1)
+
 import urllib.request
 import xml.etree.ElementTree
 from time import sleep

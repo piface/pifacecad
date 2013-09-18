@@ -7,7 +7,12 @@ from time import sleep
 import threading
 import sys
 import os
-import twitter  # http://mike.verdone.ca/twitter/
+try:
+    import twitter  # http://mike.verdone.ca/twitter/
+except ImportError:
+    print("You need to install Python Twitter Tools "
+          "(http://mike.verdone.ca/twitter/).")
+    sys.exit(1)
 import pifacecommon
 import pifacecad
 
