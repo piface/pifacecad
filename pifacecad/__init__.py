@@ -23,8 +23,8 @@ from pifacecommon.interrupts import (
 )
 
 from .core import (
-    SPI_BUS,
-    SPI_CHIP_SELECT,
+    DEFAULT_SPI_BUS,
+    DEFAULT_SPI_CHIP_SELECT,
     INPUT_PORT,
     MAX_SWITCHES,
 )

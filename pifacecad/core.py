@@ -2,10 +2,14 @@ from .lcd import PiFaceLCD
 import pifacecommon
 
 
-SPI_BUS = 0
-SPI_CHIP_SELECT = 1
+DEFAULT_SPI_BUS = 0
+DEFAULT_SPI_CHIP_SELECT = 1
 INPUT_PORT = pifacecommon.core.GPIOA
 MAX_SWITCHES = 8
+
+
+class NoPiFaceCADDetectedError(Exception):
+    pass
 
 
 class Switch(pifacecommon.core.DigitalInputItem):
@@ -59,9 +63,25 @@ class SwitchEventListener(pifacecommon.interrupts.PortEventListener):
         super(SwitchEventListener, self).__init__(INPUT_PORT)
 
 
-def init():
-    """Initialises the PiFace CAD board."""
-    pifacecommon.core.init(SPI_BUS, SPI_CHIP_SELECT)
+def init(init_board=True,
+         bus=DEFAULT_SPI_BUS,
+         chip_select=DEFAULT_SPI_CHIP_SELECT):
+    """Initialises the PiFace CAD board.
+
+    :param init_board: Initialise the board (default: True)
+    :type init_board: boolean
+    :param bus: SPI bus /dev/spidev<bus>.<chipselect> (default: {bus})
+    :type bus: int
+    :param chip_select: SPI bus /dev/spidev<bus>.<chipselect> (default: {chip})
+    :type chip_select: int
+    :raises: :class:`NoPiFaceDigitalDetectedError`
+    """.format(bus=DEFAULT_SPI_BUS, chip=DEFAULT_SPI_CHIP_SELECT)
+
+    pifacecommon.core.init(bus, chip_select)
+
+    if not init_board:
+        return
+
     ioconfig = (
         pifacecommon.core.BANK_OFF |
         pifacecommon.core.INT_MIRROR_OFF |
@@ -72,19 +92,14 @@ def init():
         pifacecommon.core.INTPOL_LOW
     )
     pifacecommon.core.write(ioconfig, pifacecommon.core.IOCON)
+    pfioconf = pifacecommon.core.read(pifacecommon.core.IOCON)
+    if pfioconf != ioconfig:
+        raise NoPiFaceCADDetectedError(
+            "No PiFace Control and Display board detected!")
 
-    # set up port A as inputs and turn on the pullups, also enable interrupts
-    pifacecommon.core.write(0xFF, pifacecommon.core.IODIRA)
-    pifacecommon.core.write(0xFF, pifacecommon.core.GPPUA)
-
-    ##### not needed?
-    pifacecommon.core.write(0xFF, pifacecommon.core.GPINTENA)  # ????
-    pifacecommon.core.read(INPUT_PORT)  # clear interrupt
-    ##### not needed?
-
-    # set port B as outputs
-    pifacecommon.core.write(0, pifacecommon.core.IODIRB)
-
+    pifacecommon.core.write(0xFF, pifacecommon.core.IODIRA)  # port A as inputs
+    pifacecommon.core.write(0xFF, pifacecommon.core.GPPUA)  # turn on pullups
+    pifacecommon.core.write(0, pifacecommon.core.IODIRB)  # port B as outputs
     pifacecommon.interrupts.enable_interrupts(INPUT_PORT)
 
 
