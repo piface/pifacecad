@@ -30,6 +30,7 @@ Contents:
    installation
    example
    lirc
+   creating_custom_bitmaps
    reference
    reference_tools
 
