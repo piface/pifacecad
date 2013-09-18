@@ -1,27 +1,27 @@
 begin
   remote = *
   button = 0
-  prog = pifacecadtest
+  prog = pifacecad-radio-example
   config = 0
 end
 
 begin
   remote = *
   button = 1
-  prog = pifacecadtest
+  prog = pifacecad-radio-example
   config = 1
 end
 
 begin
   remote = *
   button = 2
-  prog = pifacecadtest
+  prog = pifacecad-radio-example
   config = 2
 end
 
 begin
   remote = *
   button = 3
-  prog = pifacecadtest
+  prog = pifacecad-radio-example
   config = 3
 end

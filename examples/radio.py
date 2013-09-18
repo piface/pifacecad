@@ -193,7 +193,8 @@ if __name__ == "__main__":
     switchlistener.register(7, pifacecad.IODIR_ON, radio.next_station)
 
     irlistener = pifacecad.IREventListener(
-        prog="pifacecadtest", lircrc="./examples/radiolircrc")
+        prog="pifacecad-radio-example",
+        lircrc="/usr/share/doc/python3-pifacecad/examples/radiolircrc")
     for i in range(4):
         irlistener.register(str(i), radio_preset_ir)
 
