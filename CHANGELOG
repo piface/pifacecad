@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v1.1.1
+------
+- Updated for compatibility with pifacecommon v4.0.0.
+
 v1.1.0
 ------
 - Added bus and chip select.

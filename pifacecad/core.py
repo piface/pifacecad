@@ -19,7 +19,8 @@ class Switch(pifacecommon.core.DigitalInputItem):
             raise pifacecommon.core.RangeError(
                 "Specified switch index (%d) out of range." % switch_num)
         else:
-            super(Switch, self).__init__(switch_num, INPUT_PORT, board_num)
+            super(Switch, self).__init__(
+                switch_num, INPUT_PORT, board_num, toggle=1)
 
 
 class PiFaceCAD(object):
@@ -43,7 +44,7 @@ class PiFaceCAD(object):
     def __init__(self, board_num=0):
         self.board_num = board_num
         self.switch_port = \
-            pifacecommon.core.DigitalInputPort(INPUT_PORT, board_num)
+            pifacecommon.core.DigitalInputPort(INPUT_PORT, board_num, toggle=1)
         self.switches = [Switch(i, board_num) for i in range(MAX_SWITCHES)]
         self.lcd = PiFaceLCD()
 
