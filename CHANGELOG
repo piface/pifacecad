@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v1.1.2
+------
+- Fixed toggle_mask bug and updated test_switches.
+
 v1.1.1
 ------
 - Updated for compatibility with pifacecommon v4.0.0.

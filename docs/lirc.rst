@@ -78,10 +78,10 @@ Configuring LIRC
 
 See also: http://www.lirc.org/html/configure.html
 
-lirc.conf
+lircd.conf
 ---------
 
-The ``/etc/lirc/lirc.conf`` file tells LIRC about your remote control. Since every
+The ``/etc/lirc/lircd.conf`` file tells LIRC about your remote control. Since every
 remote control is different, you need to generate a different config for each
 remote. Alternatively you could try and find your remote control config file
 here: http://lirc.sourceforge.net/remotes/.
