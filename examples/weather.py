@@ -7,6 +7,7 @@ click on hypertext link with the station ID, then on the bottom right of the
 page, click on the Current Conditions XML. Thats your link! Good luck!
 """
 
+import sys
 PY3 = sys.version_info[0] >= 3
 if not PY3:
     print("Weather only works with `python3`.")

@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v1.1.3
+------
+- Fixed weather.py example (import sys).
+
 v1.1.2
 ------
 - Fixed toggle_mask bug and updated test_switches.
