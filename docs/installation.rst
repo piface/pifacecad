@@ -2,26 +2,14 @@
 Installation
 ############
 
-First, you will need to install ``lirc``::
+Make sure you are using the lastest version of Raspbian::
 
-    $ sudo apt-get install lirc
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
 
-Then you will need to download and install the latest releases of
-(using ``sudo dpkg -i``):
+Install ``pifacecad`` (for Python 3 and 2) with the following command::
 
-- `pifacecommon <https://github.com/piface/pifacecommon/releases>`_
-- `python-lirc <https://github.com/tompreston/python-lirc/releases>`_
-  Python 3 support for LIRC. Be sure to install the correct architecture
-  (**armhf** for a Raspberry Pi).
-
-Then download the latest PiFace CAD Debian package from
-`here <https://github.com/piface/pifacecad/releases>`_ and install with:
-
-.. parsed-literal::
-
-    $ sudo dpkg -i python3-pifacecad\_\ |version|-1_all.deb
-
-.. note:: Python 2 users will want to use python-pifacecad\_\ |version|-1_all.deb.
+    $ sudo apt-get install python{,3}-pifacecad
 
 Test by running the ``sysinfo.py`` program::
 

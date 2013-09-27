@@ -18,19 +18,17 @@ You can also find the documentation and some examples installed at:
 Install
 =======
 
-Download the latest debian package from
-[here](https://github.com/piface/pifacecad/releases) and install with:
+Make sure you are using the lastest version of Raspbian:
 
-    $ dpkg -i python3-pifacecad_1.0.0-1_all.deb
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
 
-You may need to download and install the latest releases of:
+Install `pifacecad` (for Python 3 and 2) with the following command:
 
-- [pifacecommon](https://github.com/piface/pifacecommon/releases)
-- [python-lirc](https://github.com/tompreston/python-lirc/releases)
-  (Python 3 support for LIRC)
+    $ sudo apt-get install python{,3}-pifacecad
 
-You will also need to [configure the IR Receiver](http://piface.github.io/pifacecad/lirc.html#setting-up-the-infrared-receiver) and reboot.
+Test by running the `sysinfo.py` program:
 
-Test by running the ``sysinfo.py`` program:
+    $ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
 
-    python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
+You will need to [configure the IR receiver](http://piface.github.io/pifacecad/lirc.html#setting-up-the-infrared-receiver>`_ yourself).
