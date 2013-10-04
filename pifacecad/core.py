@@ -94,6 +94,8 @@ class SwitchEventListener(pifacecommon.interrupts.PortEventListener):
     >>> listener.register(0, pifacecad.IODIR_ON, print_flag)
     >>> listener.activate()
     """
-    def __init__(self):
+    def __init__(self, chip=None):
+        if chip is None:
+            chip = PiFaceCAD()
         super(SwitchEventListener, self).__init__(
-            pifacecommon.mcp23s17.GPIOA)
+            pifacecommon.mcp23s17.GPIOA, chip)

@@ -4,7 +4,31 @@ Change Log
 v2.0.0
 ------
 - Updated for compatibility with pifacecommon v4.0.0.
-- MORE TO COME
+- All occurrences of `board_num` have been replaced with `hardware_addr` which
+  is more appropriate.
+- PiFace Control and Display is initialised when you instantiate the object.
+  **You do not need to call pifacecad.init() any more.**
+- PiFaceCAD inherits registers from MCP23S17 so you can access all the
+  registers on the chip. For example GPPUP:
+
+      >>> cad = PiFaceCAD()
+      >>> cad.gppub.value = 0xff
+      >>> cad.gppub.bits[4].value = 1
+
+- SwitchEventListener now requires that you provide a chip object, not
+  a hardware_addr (board_num). This defaults to PiFaceCAD(hardware_addr=0).
+- Interrupt events contain a chip object representing the calling chip instead
+  of the hardware_addr (board_num). You can still access the
+  hardware_addr (board_num) like so:
+
+      >>> def my_callback(event):
+      ...     print(event.chip.hardware_addr)
+
+- Removed the Switch class. It added arbitrary restrictions and
+  was not very useful. `pifacecommon.mcp23s17.MCP23S17RegisterBit` is more
+  appropriate.
+- Updated examples to reflect new changes.
+- See the docs (particularly the examples) for more information.
 
 v1.1.3 *ignore*
 ---------------

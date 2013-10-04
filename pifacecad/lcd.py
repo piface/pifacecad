@@ -102,8 +102,12 @@ class HD44780DataPort(pifacecommon.mcp23s17.MCP23S17RegisterNibble):
 
 
 class HD44780ControlPort(pifacecommon.mcp23s17.MCP23S17Register):
+    """Control Port for an HD44780 LCD display. Must have backlight_pin,
+    read_write_pin, register_select_pin, enable_pin.
+    """
     def __init__(self, chip):
-        super(HD44780ControlPort, self).__init__(pifacecommon.mcp23s17.GPIOB, chip)
+        super(HD44780ControlPort, self).__init__(
+            pifacecommon.mcp23s17.GPIOB, chip)
 
     @property
     def backlight_pin(self):
@@ -130,21 +134,6 @@ class HD44780LCD4bitModeMixIn(object):
         :param b: The byte to send.
         :type b: int
         """
-        # send first nibble (0bXXXX0000)
-        # current_byte = pifacecommon.core.read(LCD_PORT)
-        # new_byte = current_byte & 0xF0  # clear nibble
-        # new_byte |= (b >> 4) & 0xF  # set nibble
-        # #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
-        # pifacecommon.core.write(new_byte, LCD_PORT)
-        # self.pulse_clock()
-
-        # # send second nibble (0b0000XXXX)
-        # current_byte = pifacecommon.core.read(LCD_PORT)
-        # new_byte = current_byte & 0xF0  # clear nibble
-        # new_byte |= b & 0xF  # set nibble
-        # #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
-        # pifacecommon.core.write(new_byte, LCD_PORT)
-        # self.pulse_clock()
         self.data_port.value = (b >> 4) & 0xF
         self.pulse_clock()
         self.data_port.value = b & 0xF

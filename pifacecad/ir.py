@@ -2,7 +2,7 @@ import threading
 import multiprocessing
 import multiprocessing.queues
 import lirc
-import pifacecommon
+import pifacecommon.interrupts
 
 
 class IREvent(object):

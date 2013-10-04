@@ -58,7 +58,6 @@ def show_sysinfo():
 
 
 if __name__ == "__main__":
-    pifacecad.init()
     cad = pifacecad.PiFaceCAD()
     cad.lcd.blink_off()
     cad.lcd.cursor_off()
@@ -74,5 +73,3 @@ if __name__ == "__main__":
         cad.lcd.write("Waiting for IP..")
         wait_for_ip()
         show_sysinfo()
-
-    pifacecad.deinit()

@@ -66,10 +66,10 @@ class WeatherStation(object):
 
 
 class WeatherDisplay(object):
-    def __init__(self, stations, station_index=0):
+    def __init__(self, cad, stations, station_index=0):
         self.stations = stations
         self.station_index = station_index
-        self.cad = pifacecad.PiFaceCAD()
+        self.cad = cad
         self.cad.lcd.store_custom_bitmap(TEMP_SYMBOL_INDEX, TEMP_SYMBOL)
         self.cad.lcd.store_custom_bitmap(WIND_SYMBOL_INDEX, WIND_SYMBOL)
         self.cad.lcd.backlight_on()
@@ -115,12 +115,12 @@ def get_current_condition_url(weather_station_id):
 
 
 if __name__ == "__main__":
-    pifacecad.init()
     stations = \
         [WeatherStation(s['location'], s['id']) for s in WEATHER_STATIONS]
 
+    cad = pifacecad.PiFaceCAD()
     global weatherdisplay
-    weatherdisplay = WeatherDisplay(stations)
+    weatherdisplay = WeatherDisplay(cad, stations)
     weatherdisplay.update()
 
     # listener cannot deactivate itself so we have to wait until it has
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     end_barrier = Barrier(2)
 
     # wait for button presses
-    switchlistener = pifacecad.SwitchEventListener()
+    switchlistener = pifacecad.SwitchEventListener(chip=cad)
     switchlistener.register(4, pifacecad.IODIR_ON, end_barrier.wait)
     switchlistener.register(5, pifacecad.IODIR_ON, weatherdisplay.update)
     switchlistener.register(
@@ -143,4 +143,3 @@ if __name__ == "__main__":
     # exit
     weatherdisplay.close()
     switchlistener.deactivate()
-    pifacecad.deinit()

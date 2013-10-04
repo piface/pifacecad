@@ -5,12 +5,9 @@ Examples
 Basic usage
 ===========
 
-Set up::
+::
 
     >>> import pifacecad
-    >>> pifacecad.init()  # initialises PiFace Control and Display
-
-Playing with PiFace Control and Display::
 
     >>> cad = pifacecad.PiFaceCAD()    # create PiFace Control and Display object
     >>> cad.lcd.backlight_on()         # turns the backlight on
@@ -43,11 +40,11 @@ You need to add your LIRC client (your program) to ~/.lircrc::
 Then, register IR codes to functions using :class:`IREventListener`::
 
     >>> import pifacecad
-    >>> pifacecad.init()
 
     >>> def print_ir_code(event):
     ...     print(event.ir_code)
     ...
+    >>> pifacecad.PiFaceCAD()  # initialise a PiFace Control and Display board
     >>> listener = pifacecad.IREventListener(prog="pifacecadexample")
     >>> listener.register('one', print_ir_code)
     >>> listener.register('two', print_ir_code)
@@ -62,16 +59,15 @@ Instead of polling the switches we can use the :class:`SwitchEventListener` to
 register actions that we wish to be called on certain switch events.
 
     >>> import pifacecad
-    >>> pifacecad.init()
+    >>> def update_pin_text(event):
+    ...     event.chip.lcd.set_cursor(13, 0)
+    ...     event.chip.lcd.write(str(event.pin_num))
+    ...
     >>> cad = pifacecad.PiFaceCAD()
     >>> cad.lcd.write("You pressed: ")
-    >>> def update_pin_text(event):
-    ...     cad.lcd.set_cursor(13, 0)
-    ...     cad.lcd.write(str(event.pin_num))
-    ...
-    >>> listener = pifacecad.SwitchEventListener()
+    >>> listener = pifacecad.SwitchEventListener(chip=cad)
     >>> for i in range(8):
-    ...     listener.register(i, pifacecad.IODIR_ON, update_pin_text)
+    ...     listener.register(i, pifacecad.IODIR_FALLING_EDGE, update_pin_text)
     >>> listener.activate()
 
 The screen should update as buttons are pressed. To stop the listener, call
@@ -79,24 +75,21 @@ it's ``deactivate`` method:
 
     >>> listener.deactivate()
 
+
 The :class:`Event` object has some interesting attributes. You can access them
 like so::
 
     >>> import pifacecad
-    >>> pifacecad.init()
-    >>> def print_event_info(event):
-    ...     print("Flag:     ", bin(event.interrupt_flag))
-    ...     print("Capture:  ", bin(event.interrupt_capture))
-    ...     print("Pin num:  ", event.pin_num)
-    ...     print("Direction:", event.direction)
-    ...
-    >>> listener = pifacecad.SwitchEventListener()
-    >>> listener.register(0, pifacecad.IODIR_OFF, print_event_info)
+    >>> cad = pifacecad.PiFaceCAD()
+    >>> listener = pifacecad.InputEventListener(chip=cad)
+    >>> listener.register(0, pifacecad.IODIR_RISING_EDGE, print)
     >>> listener.activate()
 
 This would print out the event informaion whenever you unpress switch 0::
 
-    Flag:      0b00000001
-    Capture:   0b11111110
-    Pin num:   0
-    Direction: 1
+    interrupt_flag:    0b1
+    interrupt_capture: 0b11111111
+    pin_num:           0
+    direction:         1
+    chip:              <pifacecad.core.PiFaceCAD object at 0xb682dab0>
+    timestamp:         1380893579.447889

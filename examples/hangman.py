@@ -237,11 +237,9 @@ class HangmanGame(object):
 
 
 if __name__ == "__main__":
-    pifacecad.init()
     try:
         word = sys.argv[1].lower()
     except IndexError:
         word = WORDS[randint(0, len(WORDS)-1)]
     game = HangmanGame(word)
     game.start()
-    pifacecad.deinit()

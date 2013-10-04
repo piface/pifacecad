@@ -32,33 +32,10 @@ if not PY3:
 SWITCH_RANGE = 8
 
 
-class TestRangedItem(object):
-    def test_normal_init(self):
-        for i in self.item_range:
-            item_instance = self.item_type(i)
-            self.assertTrue(type(item_instance) is self.item_type)
-
-    def test_boundary_init(self):
-        boundaries = (min(self.item_range) - 1, max(self.item_range) + 1)
-        for i in boundaries:
-            self.assertRaises(
-                pifacecommon.core.RangeError,
-                self.item_type,
-                i
-            )
-
-
-class TestSwitch(TestRangedItem, unittest.TestCase):
-    def setUp(self):
-        self.item_type = pifacecad.Switch
-        self.item_range = range(SWITCH_RANGE)
-
-
 # @unittest.skip
 class TestPiFaceCADSwitches(unittest.TestCase):
     """General use tests (not really in the spirit of unittesting)."""
     def setUp(self):
-        pifacecad.init()
         self.cad = pifacecad.PiFaceCAD()
 
     def test_switches(self):
@@ -71,14 +48,19 @@ class TestPiFaceCADSwitches(unittest.TestCase):
             # and the switch port
             bit_pattern = (1 << a) ^ (1 << b)
             self.assertEqual(self.cad.switch_port.value, bit_pattern)
+        # for i in range(SWITCH_RANGE):
+        #     input(
+        #         "Hold switch {}, then press enter.".format(i))
+        #     self.assertEqual(self.cad.switches[i].value, 1)
+        #     self.assertEqual(self.cad.switches[i].value, 1)
 
-    def tearDown(self):
-        pifacecad.deinit()
+        #     # and the switch port
+        #     bit_pattern = (1 << i)
+        #     self.assertEqual(self.cad.switch_port.value, bit_pattern)
 
 
 class TestInterrupts(unittest.TestCase):
     def setUp(self):
-        pifacecad.init()
         self.barrier = threading.Barrier(2, timeout=5)
         self.test_passed = False
         self.direction = pifacecad.IODIR_ON
@@ -101,12 +83,11 @@ class TestInterrupts(unittest.TestCase):
 
     def tearDown(self):
         self.listener.deactivate()
-        pifacecad.deinit()
 
 
+@unittest.skip
 class TestIR(unittest.TestCase):
     def setUp(self):
-        pifacecad.init()
         self.barrier = threading.Barrier(2, timeout=5)
         self.listener = pifacecad.IREventListener(
             prog="pifacecadtest",
@@ -127,13 +108,11 @@ class TestIR(unittest.TestCase):
 
     def tearDown(self):
         self.listener.deactivate()
-        pifacecad.deinit()
 
 
 # @unittest.skip
 class TestLCD(unittest.TestCase):
     def setUp(self):
-        pifacecad.init()
         self.cad = pifacecad.PiFaceCAD()
 
     def test_normal_display(self):

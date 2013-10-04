@@ -130,7 +130,7 @@ class LCDScanf(object):
             self.cad.lcd.display_on()
 
         # wait for user input
-        listener = pifacecad.SwitchEventListener()
+        listener = pifacecad.SwitchEventListener(self.cad)
         listener.register(7, pifacecad.IODIR_ON, self.right_event)
         listener.register(6, pifacecad.IODIR_ON, self.left_event)
         listener.register(5, pifacecad.IODIR_ON, self.change_mode_event)

@@ -34,14 +34,14 @@ class NoTweetsError(Exception):
 
 
 class TwitterTicker(object):
-    def __init__(self, oauth_token, oauth_secret, search_term=None):
+    def __init__(self, cad, oauth_token, oauth_secret, search_term=None):
         self.twitter = twitter.Twitter(
             auth=twitter.OAuth(
                 oauth_token, oauth_secret,
                 CONSUMER_KEY, CONSUMER_SECRET)
         )
         self.search_term = search_term
-        self.cad = pifacecad.PiFaceCAD()
+        self.cad = cad
         self.cad.lcd.blink_off()
         self.cad.lcd.cursor_off()
         self.cad.lcd.backlight_on()
@@ -127,8 +127,6 @@ class TwitterTicker(object):
 
 
 if __name__ == "__main__":
-    pifacecad.init()
-
     try:
         search_term = sys.argv[1]
     except IndexError:
@@ -144,8 +142,10 @@ if __name__ == "__main__":
 
     oauth_token, oauth_secret = twitter.read_token_file(twitter_creds)
 
+    cad = pifacecad.PiFaceCAD()
+
     global twitterticker
-    twitterticker = TwitterTicker(oauth_token, oauth_secret, search_term)
+    twitterticker = TwitterTicker(cad, oauth_token, oauth_secret, search_term)
     twitterticker.auto_update()  # start the updating process
 
     # listener cannot deactivate itself so we have to wait until it has
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     end_barrier = threading.Barrier(2)
 
     # wait for button presses
-    switchlistener = pifacecad.SwitchEventListener()
+    switchlistener = pifacecad.SwitchEventListener(chip=cad)
     switchlistener.register(4, pifacecad.IODIR_ON, end_barrier.wait)
     switchlistener.register(5, pifacecad.IODIR_ON, twitterticker.update)
     switchlistener.register(6, pifacecad.IODIR_ON, twitterticker.previous_page)
@@ -166,4 +166,3 @@ if __name__ == "__main__":
     # exit
     twitterticker.close()
     switchlistener.deactivate()
-    pifacecad.deinit()

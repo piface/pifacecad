@@ -59,12 +59,11 @@ MUSIC_SYMBOL_INDEX = 3
 
 
 class Radio(object):
-    def __init__(self, start_station=0):
+    def __init__(self, cad, start_station=0):
         self.current_station_index = start_station
         self.playing_process = None
 
         # set up cad
-        cad = pifacecad.PiFaceCAD()
         cad.lcd.blink_off()
         cad.lcd.cursor_off()
         cad.lcd.backlight_on()
@@ -192,10 +191,9 @@ if __name__ == "__main__":
         else:
             raise  # Something else went wrong while trying to run `mplayer`
 
-    pifacecad.init()
-
+    cad = pifacecad.PiFaceCAD()
     global radio
-    radio = Radio()
+    radio = Radio(cad)
     radio.play()
 
     # listener cannot deactivate itself so we have to wait until it has
@@ -204,7 +202,7 @@ if __name__ == "__main__":
     end_barrier = Barrier(2)
 
     # wait for button presses
-    switchlistener = pifacecad.SwitchEventListener()
+    switchlistener = pifacecad.SwitchEventListener(chip=cad)
     for pstation in range(4):
         switchlistener.register(
             pstation, pifacecad.IODIR_ON, radio_preset_switch)
@@ -235,4 +233,3 @@ if __name__ == "__main__":
     switchlistener.deactivate()
     if irlistener_activated:
         irlistener.deactivate()
-    pifacecad.deinit()

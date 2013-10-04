@@ -112,13 +112,13 @@ class TrainDepartureBoard(object):
 
 
 class TrainDepartureBoardDisplay(object):
-    def __init__(self, departure_boards, board_index=0):
+    def __init__(self, cad, departure_boards, board_index=0):
         self.departure_boards = departure_boards
         self.board_index = board_index
         self.later_times_page = 0
         self.timer = threading.Timer(UPDATE_INTERVAL, self.auto_update)
         self.timer.start()
-        self.cad = pifacecad.PiFaceCAD()
+        self.cad = cad
         self.cad.lcd.backlight_on()
         self.cad.lcd.blink_off()
         self.cad.lcd.cursor_off()
@@ -219,16 +219,16 @@ if __name__ == "__main__":
     except IndexError:
         departure_station = get_station_from_code(DEFAULT_DEPARTURE_STATION)
 
-    pifacecad.init()
-
     departure_boards = [
         TrainDepartureBoard(departure_station, station)
         for station in TRAIN_STATIONS
         if station is not departure_station
     ]
 
+    cad = pifacecad.PiFaceCAD()
+
     global traintimedisplay
-    traintimedisplay = TrainDepartureBoardDisplay(departure_boards)
+    traintimedisplay = TrainDepartureBoardDisplay(cad, departure_boards)
     traintimedisplay.update()
 
     # listener cannot deactivate itself so we have to wait until it has
@@ -238,7 +238,7 @@ if __name__ == "__main__":
 
     # wait for button presses
     global switchlistener
-    switchlistener = pifacecad.SwitchEventListener()
+    switchlistener = pifacecad.SwitchEventListener(chip=cad)
     switchlistener.register(4, pifacecad.IODIR_ON, end_barrier.wait)
     switchlistener.register(
         5, pifacecad.IODIR_ON, traintimedisplay.next_later_times_page)
@@ -253,4 +253,3 @@ if __name__ == "__main__":
     # exit
     traintimedisplay.close()
     switchlistener.deactivate()
-    pifacecad.deinit()

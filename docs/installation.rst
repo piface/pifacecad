@@ -30,4 +30,4 @@ You can stop the service with::
 
 You can enable the service to run at boot (handy for headless Raspberry Pi's)::
 
-    $ sudo update-rc.d pifacecadsysinfo enable
+    $ sudo update-rc.d pifacecadsysinfo defaults
