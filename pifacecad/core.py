@@ -1,32 +1,21 @@
-from .lcd import PiFaceLCD
-import pifacecommon
+import pifacecommon.mcp23s17
+import pifacecommon.interrupts
+import pifacecad.lcd
 
 
 DEFAULT_SPI_BUS = 0
 DEFAULT_SPI_CHIP_SELECT = 1
-INPUT_PORT = pifacecommon.core.GPIOA
-MAX_SWITCHES = 8
+NUM_SWITCHES = 8
 
 
 class NoPiFaceCADDetectedError(Exception):
     pass
 
 
-class Switch(pifacecommon.core.DigitalInputItem):
-    """A switch on PiFace CAD."""
-    def __init__(self, switch_num, board_num=0):
-        if switch_num < 0 or switch_num >= MAX_SWITCHES:
-            raise pifacecommon.core.RangeError(
-                "Specified switch index (%d) out of range." % switch_num)
-        else:
-            super(Switch, self).__init__(
-                switch_num, INPUT_PORT, board_num, toggle_mask=1)
-
-
-class PiFaceCAD(object):
+class PiFaceCAD(pifacecommon.mcp23s17.MCP23S17,
+                pifacecommon.interrupts.GPIOInterruptDevice):
     """A PiFace Control and Display board.
 
-    :attribute: board_num -- The board number.
     :attribute: switch_port -- See :class:`pifacecommon.core.DigitalInputPort`.
     :attribute: switches -- list containing :class:`Switch`.
     :attribute: lcd -- See :class:`pifacecad.lcd.PiFaceLCD`.
@@ -41,12 +30,57 @@ class PiFaceCAD(object):
     >>> cad.lcd.write("Hello, PiFaceLCD!")
     >>> cad.lcd.backlight_on()
     """
-    def __init__(self, board_num=0):
-        self.board_num = board_num
-        self.switch_port = pifacecommon.core.DigitalInputPort(
-            INPUT_PORT, board_num, toggle_mask=0xff)
-        self.switches = [Switch(i, board_num) for i in range(MAX_SWITCHES)]
-        self.lcd = PiFaceLCD()
+    def __init__(self,
+                 hardware_addr=0,
+                 bus=DEFAULT_SPI_BUS,
+                 chip_select=DEFAULT_SPI_CHIP_SELECT,
+                 init_board=True):
+        super(PiFaceCAD, self).__init__(hardware_addr, bus, chip_select)
+
+        self.switch_port = pifacecommon.mcp23s17.MCP23S17RegisterNeg(
+            pifacecommon.mcp23s17.GPIOA, self)
+
+        self.switches = [pifacecommon.mcp23s17.MCP23S17RegisterBitNeg(
+            i, pifacecommon.mcp23s17.GPIOA, self)
+            for i in range(NUM_SWITCHES)]
+
+        self.lcd = pifacecad.lcd.PiFaceLCD(
+            control_port=pifacecad.lcd.HD44780ControlPort(self),
+            data_port=pifacecad.lcd.HD44780DataPort(self))
+
+        if init_board:
+            self.init_board()
+
+    def enable_interrupts(self):
+        self.gpintena.value = 0xFF
+        self.gpio_interrupts_enable()
+
+    def disable_interrupts(self):
+        self.gpintena.value = 0x00
+        self.gpio_interrupts_disable()
+
+    def init_board(self):
+        ioconfig = (
+            pifacecommon.core.BANK_OFF |
+            pifacecommon.core.INT_MIRROR_OFF |
+            pifacecommon.core.SEQOP_ON |
+            pifacecommon.core.DISSLW_OFF |
+            pifacecommon.core.HAEN_ON |
+            pifacecommon.core.ODR_OFF |
+            pifacecommon.core.INTPOL_LOW
+        )
+        self.iocon.value = ioconfig
+        if self.iocon.value != ioconfig:
+            raise NoPiFaceCADDetectedError(
+                "No PiFace Control and Display board detected "
+                "(hardware_addr={h}, bus={b}, chip_select={c}).".format(
+                    h=self.hardware_addr, b=self.bus, c=self.chip_select))
+        else:
+            # finish configuring the board
+            self.iodira.value = 0xFF  # GPIOA as inputs
+            self.gppua.value = 0xFF  # input pullups on
+            self.iodirb.value = 0  # GPIOB as outputs
+            self.enable_interrupts()
 
 
 class SwitchEventListener(pifacecommon.interrupts.PortEventListener):
@@ -61,50 +95,5 @@ class SwitchEventListener(pifacecommon.interrupts.PortEventListener):
     >>> listener.activate()
     """
     def __init__(self):
-        super(SwitchEventListener, self).__init__(INPUT_PORT)
-
-
-def init(init_board=True,
-         bus=DEFAULT_SPI_BUS,
-         chip_select=DEFAULT_SPI_CHIP_SELECT):
-    """Initialises the PiFace CAD board.
-
-    :param init_board: Initialise the board (default: True)
-    :type init_board: boolean
-    :param bus: SPI bus /dev/spidev<bus>.<chipselect> (default: {bus})
-    :type bus: int
-    :param chip_select: SPI bus /dev/spidev<bus>.<chipselect> (default: {chip})
-    :type chip_select: int
-    :raises: :class:`NoPiFaceDigitalDetectedError`
-    """.format(bus=DEFAULT_SPI_BUS, chip=DEFAULT_SPI_CHIP_SELECT)
-
-    pifacecommon.core.init(bus, chip_select)
-
-    if not init_board:
-        return
-
-    ioconfig = (
-        pifacecommon.core.BANK_OFF |
-        pifacecommon.core.INT_MIRROR_OFF |
-        pifacecommon.core.SEQOP_ON |
-        pifacecommon.core.DISSLW_OFF |
-        pifacecommon.core.HAEN_ON |
-        pifacecommon.core.ODR_OFF |
-        pifacecommon.core.INTPOL_LOW
-    )
-    pifacecommon.core.write(ioconfig, pifacecommon.core.IOCON)
-    pfioconf = pifacecommon.core.read(pifacecommon.core.IOCON)
-    if pfioconf != ioconfig:
-        raise NoPiFaceCADDetectedError(
-            "No PiFace Control and Display board detected!")
-
-    pifacecommon.core.write(0xFF, pifacecommon.core.IODIRA)  # port A as inputs
-    pifacecommon.core.write(0xFF, pifacecommon.core.GPPUA)  # turn on pullups
-    pifacecommon.core.write(0, pifacecommon.core.IODIRB)  # port B as outputs
-    pifacecommon.interrupts.enable_interrupts(INPUT_PORT)
-
-
-def deinit():
-    """Deitialises the PiFace CAD board."""
-    pifacecommon.interrupts.disable_interrupts(INPUT_PORT)
-    pifacecommon.core.deinit()
+        super(SwitchEventListener, self).__init__(
+            pifacecommon.mcp23s17.GPIOA)

@@ -1,9 +1,9 @@
 import math
 from time import sleep
-import pifacecommon
+import pifacecommon.mcp23s17
 
 
-LCD_PORT = pifacecommon.core.GPIOB
+# LCD_PORT = pifacecommon.core.GPIOB
 
 # piface peripheral pin numbers
 # each peripheral is connected to an I/O pin
@@ -93,8 +93,80 @@ CLEAR_DISPLAY_DELAY = 3000 / float(1000000)
 MAX_CUSTOM_BITMAPS = 8
 
 
-class PiFaceLCD(object):
-    def __init__(self):
+class HD44780DataPort(pifacecommon.mcp23s17.MCP23S17RegisterNibble):
+    def __init__(self, chip):
+        super(HD44780DataPort, self).__init__(
+            pifacecommon.mcp23s17.LOWER_NIBBLE,
+            pifacecommon.mcp23s17.GPIOB,
+            chip)
+
+
+class HD44780ControlPort(pifacecommon.mcp23s17.MCP23S17Register):
+    def __init__(self, chip):
+        super(HD44780ControlPort, self).__init__(pifacecommon.mcp23s17.GPIOB, chip)
+
+    @property
+    def backlight_pin(self):
+        return self.bits[PH_PIN_LED_EN]
+
+    @property
+    def read_write_pin(self):
+        return self.bits[PH_PIN_RW]
+
+    @property
+    def register_select_pin(self):
+        return self.bits[PH_PIN_RS]
+
+    @property
+    def enable_pin(self):
+        return self.bits[PH_PIN_ENABLE]
+
+
+class HD44780LCD4bitModeMixIn(object):
+    def send_byte(self, b):
+        """Send byte to LCD. Each nibble is sent individually followed by a
+        clock pulse because we're in 4 bit mode.
+
+        :param b: The byte to send.
+        :type b: int
+        """
+        # send first nibble (0bXXXX0000)
+        # current_byte = pifacecommon.core.read(LCD_PORT)
+        # new_byte = current_byte & 0xF0  # clear nibble
+        # new_byte |= (b >> 4) & 0xF  # set nibble
+        # #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
+        # pifacecommon.core.write(new_byte, LCD_PORT)
+        # self.pulse_clock()
+
+        # # send second nibble (0b0000XXXX)
+        # current_byte = pifacecommon.core.read(LCD_PORT)
+        # new_byte = current_byte & 0xF0  # clear nibble
+        # new_byte |= b & 0xF  # set nibble
+        # #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
+        # pifacecommon.core.write(new_byte, LCD_PORT)
+        # self.pulse_clock()
+        self.data_port.value = (b >> 4) & 0xF
+        self.pulse_clock()
+        self.data_port.value = b & 0xF
+        self.pulse_clock()
+
+
+class HD44780LCD8bitModeMixIn(object):
+    def send_byte(self, b):
+        """Send byte to LCD. *I've not tested this!*
+
+        :param b: The byte to send.
+        :type b: int
+        """
+        self.data_port.value = b
+        self.pulse_clock()
+
+
+class HD44780LCD(object):
+    def __init__(self, control_port, data_port):
+        self.control_port = control_port
+        self.data_port = data_port
+
         self._cursor_position = [0, 0]
         self._viewport_corner = 0  # top left corner
 
@@ -297,11 +369,13 @@ class PiFaceLCD(object):
     # backlight
     def backlight_on(self):
         """Turn on the backlight."""
-        pifacecommon.core.write_bit(True, PH_PIN_LED_EN, LCD_PORT)
+        # pifacecommon.core.write_bit(True, PH_PIN_LED_EN, LCD_PORT)
+        self.control_port.backlight_pin.value = 1
 
     def backlight_off(self):
         """Turn on the backlight."""
-        pifacecommon.core.write_bit(False, PH_PIN_LED_EN, LCD_PORT)
+        # pifacecommon.core.write_bit(False, PH_PIN_LED_EN, LCD_PORT)
+        self.control_port.backlight_pin.value = 0
 
     # send commands/characters
     def send_command(self, command):
@@ -310,7 +384,8 @@ class PiFaceLCD(object):
         :param command: The command byte to be sent.
         :type command: int
         """
-        pifacecommon.core.write_bit(False, PH_PIN_RS, LCD_PORT)
+        # pifacecommon.core.write_bit(False, PH_PIN_RS, LCD_PORT)
+        self.control_port.register_select_pin.value = 0
         self.send_byte(command)
         sleep(SETTLE_DELAY)
 
@@ -320,40 +395,21 @@ class PiFaceLCD(object):
         :param data: The data byte to be sent.
         :type data: int
         """
-        pifacecommon.core.write_bit(True, PH_PIN_RS, LCD_PORT)
+        # pifacecommon.core.write_bit(True, PH_PIN_RS, LCD_PORT)
+        self.control_port.register_select_pin.value = 1
         self.send_byte(data)
         sleep(SETTLE_DELAY)
 
-    def send_byte(self, b):
-        """Send byte to LCD. Each nibble is sent individually followed by a
-        clock pulse.
-
-        :param b: The byte to send.
-        :type b: int
-        """
-        # send first nibble (0bXXXX0000)
-        current_byte = pifacecommon.core.read(LCD_PORT)
-        new_byte = current_byte & 0xF0  # clear nibble
-        new_byte |= (b >> 4) & 0xF  # set nibble
-        #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
-        pifacecommon.core.write(new_byte, LCD_PORT)
-        self.pulse_clock()
-
-        # send second nibble (0b0000XXXX)
-        current_byte = pifacecommon.core.read(LCD_PORT)
-        new_byte = current_byte & 0xF0  # clear nibble
-        new_byte |= b & 0xF  # set nibble
-        #pifacecommon.core.spisend([0x40, LCD_PORT, new_byte])
-        pifacecommon.core.write(new_byte, LCD_PORT)
-        self.pulse_clock()
-
     def pulse_clock(self):
         """Pulse the LCD clock for reading data."""
-        pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        # pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        self.control_port.enable_pin.value = 0
         sleep(PULSE_DELAY)
-        pifacecommon.core.write_bit(True, PH_PIN_ENABLE, LCD_PORT)
+        # pifacecommon.core.write_bit(True, PH_PIN_ENABLE, LCD_PORT)
+        self.control_port.enable_pin.value = 1
         sleep(PULSE_DELAY)
-        pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        # pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
+        self.control_port.enable_pin.value = 0
         sleep(PULSE_DELAY)
 
     def write(self, text):
@@ -431,3 +487,8 @@ class LCDBitmap(bytearray):
         super(LCDBitmap, self).__init__(self)
         for line in lines:
             self.append(line)
+
+
+class PiFaceLCD(HD44780LCD, HD44780LCD4bitModeMixIn):
+    """An HD44780 LCD in 4-bit mode."""
+    pass

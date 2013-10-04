@@ -52,9 +52,7 @@ loading.append(pifacecad.LCDBitmap(
 ))
 
 
-print("Initialising")
-pifacecad.init()
-print("Getting PiFaceCAD object")
+print("Creating PiFaceCAD object")
 pc = pifacecad.PiFaceCAD()
 
 print("Storing")
