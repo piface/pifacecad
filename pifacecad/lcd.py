@@ -3,8 +3,6 @@ from time import sleep
 import pifacecommon.mcp23s17
 
 
-# LCD_PORT = pifacecommon.core.GPIOB
-
 # piface peripheral pin numbers
 # each peripheral is connected to an I/O pin
 # some pins are connected to many peripherals
@@ -25,16 +23,6 @@ PH_PIN_RS = 6
 LCD_RS = 0x40
 PH_PIN_LED_EN = 7
 LCD_LED = 0x80
-
-# inputs
-PH_PIN_SWITCH_1 = 0
-PH_PIN_SWITCH_2 = 1
-PH_PIN_SWITCH_3 = 2
-PH_PIN_SWITCH_4 = 3
-
-PH_PIN_SWITCH_SELECT = 5
-PH_PIN_SWITCH_CW = 6
-PH_PIN_SWITCH_CCW = 7
 
 # commands
 LCD_CLEARDISPLAY = 0x01
@@ -358,12 +346,10 @@ class HD44780LCD(object):
     # backlight
     def backlight_on(self):
         """Turn on the backlight."""
-        # pifacecommon.core.write_bit(True, PH_PIN_LED_EN, LCD_PORT)
         self.control_port.backlight_pin.value = 1
 
     def backlight_off(self):
         """Turn on the backlight."""
-        # pifacecommon.core.write_bit(False, PH_PIN_LED_EN, LCD_PORT)
         self.control_port.backlight_pin.value = 0
 
     # send commands/characters
@@ -373,7 +359,6 @@ class HD44780LCD(object):
         :param command: The command byte to be sent.
         :type command: int
         """
-        # pifacecommon.core.write_bit(False, PH_PIN_RS, LCD_PORT)
         self.control_port.register_select_pin.value = 0
         self.send_byte(command)
         sleep(SETTLE_DELAY)
@@ -384,20 +369,16 @@ class HD44780LCD(object):
         :param data: The data byte to be sent.
         :type data: int
         """
-        # pifacecommon.core.write_bit(True, PH_PIN_RS, LCD_PORT)
         self.control_port.register_select_pin.value = 1
         self.send_byte(data)
         sleep(SETTLE_DELAY)
 
     def pulse_clock(self):
         """Pulse the LCD clock for reading data."""
-        # pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
         self.control_port.enable_pin.value = 0
         sleep(PULSE_DELAY)
-        # pifacecommon.core.write_bit(True, PH_PIN_ENABLE, LCD_PORT)
         self.control_port.enable_pin.value = 1
         sleep(PULSE_DELAY)
-        # pifacecommon.core.write_bit(False, PH_PIN_ENABLE, LCD_PORT)
         self.control_port.enable_pin.value = 0
         sleep(PULSE_DELAY)
 
@@ -425,7 +406,6 @@ class HD44780LCD(object):
         :type char_bank: int
         :param bitmap: The bitmap to store in the CGRAM address and write.
         :type bitmap: :class:`LCDBitmap`
-        :raises: pifacecommon.core.RangeError
         """.format(max_custom_bitmaps=MAX_CUSTOM_BITMAPS)
 
         self.char_bank_in_range_or_error(char_bank)
@@ -458,7 +438,7 @@ class HD44780LCD(object):
         """
         if char_bank >= MAX_CUSTOM_BITMAPS or \
                 char_bank < 0:
-            raise pifacecommon.core.RangeError(
+            raise Exception(
                 "There are only {max} custom characters (You tried to access "
                 "{cgramaddr}).".format(
                     max=MAX_CUSTOM_BITMAPS,

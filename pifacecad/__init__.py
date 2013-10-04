@@ -27,17 +27,11 @@ from pifacecommon.interrupts import (
 from .core import (
     DEFAULT_SPI_BUS,
     DEFAULT_SPI_CHIP_SELECT,
-    # INPUT_PORT,
     NUM_SWITCHES,
 )
 
-# from .lcd import (
-#     LCD_PORT,
-# )
-
 # classes
 from .core import (
-    # Switch,
     PiFaceCAD,
     SwitchEventListener,
 )
@@ -50,9 +44,3 @@ from .lcd import (
 from .ir import (
     IREventListener,
 )
-
-# functions
-# from .core import (
-#     init,
-#     deinit,
-# )

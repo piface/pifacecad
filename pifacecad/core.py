@@ -16,8 +16,10 @@ class PiFaceCAD(pifacecommon.mcp23s17.MCP23S17,
                 pifacecommon.interrupts.GPIOInterruptDevice):
     """A PiFace Control and Display board.
 
-    :attribute: switch_port -- See :class:`pifacecommon.core.DigitalInputPort`.
-    :attribute: switches -- list containing :class:`Switch`.
+    :attribute: switch_port -- See
+        :class:`pifacecommon.mcp23s17.MCP23S17RegisterNeg`.
+    :attribute: switches --
+        list containing :class:`pifacecommon.mcp23s17.MCP23S17RegisterBitNeg`.
     :attribute: lcd -- See :class:`pifacecad.lcd.PiFaceLCD`.
 
     Example:
@@ -61,13 +63,13 @@ class PiFaceCAD(pifacecommon.mcp23s17.MCP23S17,
 
     def init_board(self):
         ioconfig = (
-            pifacecommon.core.BANK_OFF |
-            pifacecommon.core.INT_MIRROR_OFF |
-            pifacecommon.core.SEQOP_ON |
-            pifacecommon.core.DISSLW_OFF |
-            pifacecommon.core.HAEN_ON |
-            pifacecommon.core.ODR_OFF |
-            pifacecommon.core.INTPOL_LOW
+            pifacecommon.mcp23s17.BANK_OFF |
+            pifacecommon.mcp23s17.INT_MIRROR_OFF |
+            pifacecommon.mcp23s17.SEQOP_ON |
+            pifacecommon.mcp23s17.DISSLW_OFF |
+            pifacecommon.mcp23s17.HAEN_ON |
+            pifacecommon.mcp23s17.ODR_OFF |
+            pifacecommon.mcp23s17.INTPOL_LOW
         )
         self.iocon.value = ioconfig
         if self.iocon.value != ioconfig:
