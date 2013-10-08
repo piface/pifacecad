@@ -46,12 +46,13 @@ class PiFaceCAD(pifacecommon.mcp23s17.MCP23S17,
             i, pifacecommon.mcp23s17.GPIOA, self)
             for i in range(NUM_SWITCHES)]
 
-        self.lcd = pifacecad.lcd.PiFaceLCD(
-            control_port=pifacecad.lcd.HD44780ControlPort(self),
-            data_port=pifacecad.lcd.HD44780DataPort(self))
-
         if init_board:
             self.init_board()
+
+        self.lcd = pifacecad.lcd.PiFaceLCD(
+            control_port=pifacecad.lcd.HD44780ControlPort(self),
+            data_port=pifacecad.lcd.HD44780DataPort(self),
+            init_lcd=init_board)
 
     def enable_interrupts(self):
         self.gpintena.value = 0xFF
@@ -81,6 +82,7 @@ class PiFaceCAD(pifacecommon.mcp23s17.MCP23S17,
             # finish configuring the board
             self.iodira.value = 0xFF  # GPIOA as inputs
             self.gppua.value = 0xFF  # input pullups on
+            self.gpiob.value = 0
             self.iodirb.value = 0  # GPIOB as outputs
             self.enable_interrupts()
 

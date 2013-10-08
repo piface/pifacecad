@@ -1,28 +1,17 @@
 import math
-from time import sleep
+import time
 import pifacecommon.mcp23s17
 
 
-# piface peripheral pin numbers
-# each peripheral is connected to an I/O pin
-# some pins are connected to many peripherals
 # outputs
 PH_PIN_D4 = 0
-LCD_D4 = 1
 PH_PIN_D5 = 1
-LCD_D5 = 2
 PH_PIN_D6 = 2
-LCD_D6 = 4
 PH_PIN_D7 = 3
-LCD_D7 = 8
 PH_PIN_ENABLE = 4
-LCD_E = 0x10
 PH_PIN_RW = 5
-LCD_RW = 0x20
 PH_PIN_RS = 6
-LCD_RS = 0x40
 PH_PIN_LED_EN = 7
-LCD_LED = 0x80
 
 # commands
 LCD_CLEARDISPLAY = 0x01
@@ -82,6 +71,12 @@ MAX_CUSTOM_BITMAPS = 8
 
 
 class HD44780DataPort(pifacecommon.mcp23s17.MCP23S17RegisterNibble):
+    """Data Port for an HD44780 LCD display. Must have the following
+    properties:
+
+        - value
+
+    """
     def __init__(self, chip):
         super(HD44780DataPort, self).__init__(
             pifacecommon.mcp23s17.LOWER_NIBBLE,
@@ -90,8 +85,14 @@ class HD44780DataPort(pifacecommon.mcp23s17.MCP23S17RegisterNibble):
 
 
 class HD44780ControlPort(pifacecommon.mcp23s17.MCP23S17Register):
-    """Control Port for an HD44780 LCD display. Must have backlight_pin,
-    read_write_pin, register_select_pin, enable_pin.
+    """Control Port for an HD44780 LCD display. Must have the following
+    properties:
+
+        - backlight_pin
+        - read_write_pin
+        - register_select_pin
+        - enable_pin
+
     """
     def __init__(self, chip):
         super(HD44780ControlPort, self).__init__(
@@ -127,6 +128,24 @@ class HD44780LCD4bitModeMixIn(object):
         self.data_port.value = b & 0xF
         self.pulse_clock()
 
+    def _pre_init_sequence(self):
+        # init sequence from p.46 of datasheet.
+        # https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
+        time.sleep(0.015)
+        self.data_port.value = 0x3
+        self.pulse_clock()
+
+        time.sleep(0.0041)
+        self.data_port.value = 0x3
+        self.pulse_clock()
+
+        time.sleep(0.0001)
+        self.data_port.value = 0x3
+        self.pulse_clock()
+
+        self.data_port.value = 0x2
+        self.pulse_clock()
+
 
 class HD44780LCD8bitModeMixIn(object):
     def send_byte(self, b):
@@ -138,9 +157,29 @@ class HD44780LCD8bitModeMixIn(object):
         self.data_port.value = b
         self.pulse_clock()
 
+    def _pre_init_sequence(self):
+        # init sequence from p.45 of datasheet.
+        # https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
+        time.sleep(0.015)
+        self.data_port.value = 0x30
+        self.pulse_clock()
+
+        time.sleep(0.0041)
+        self.data_port.value = 0x30
+        self.pulse_clock()
+
+        time.sleep(0.0001)
+        self.data_port.value = 0x30
+        self.pulse_clock()
+
+        self.data_port.value = 0x20
+        self.pulse_clock()
+
 
 class HD44780LCD(object):
-    def __init__(self, control_port, data_port):
+    """Component part of an HD4780, must be combined with a 4 or 8 bit mixin.
+    """
+    def __init__(self, control_port, data_port, init_lcd=True):
         self.control_port = control_port
         self.data_port = data_port
 
@@ -150,17 +189,24 @@ class HD44780LCD(object):
         self.numrows = LCD_MAX_LINES
         self.numcols = LCD_RAM_WIDTH
 
-        self.home()
+        if init_lcd:
+            self._pre_init_sequence()  # either 4 bit or 8 bit mode
+            self._init_sequence()
+
+            self.displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON
+            self.update_display_control()
+
+    def _init_sequence(self):
+        self.displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS
+        self.update_function_set()
+
+        self.displaycontrol = LCD_DISPLAYOFF
+        self.update_display_control()
+
         self.clear()
 
         self.displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT
         self.update_entry_mode()
-
-        self.displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON
-        self.update_display_control()
-
-        self.displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS
-        self.update_function_set()
 
     @property
     def viewport_corner(self):
@@ -193,14 +239,14 @@ class HD44780LCD(object):
         """Clears the display."""
         self.send_command(LCD_CLEARDISPLAY)  # command to clear display
         # clearing the display takes a long time
-        sleep(CLEAR_DISPLAY_DELAY)
+        time.sleep(CLEAR_DISPLAY_DELAY)
         self._cursor_position = [0, 0]
         self._viewport_corner = 0
 
     def home(self):
         """Moves the cursor to the home position."""
         self.send_command(LCD_RETURNHOME)  # set cursor position to zero
-        sleep(CLEAR_DISPLAY_DELAY)
+        time.sleep(CLEAR_DISPLAY_DELAY)
         self._cursor_position = [0, 0]
         self._viewport_corner = 0
 
@@ -361,7 +407,7 @@ class HD44780LCD(object):
         """
         self.control_port.register_select_pin.value = 0
         self.send_byte(command)
-        sleep(SETTLE_DELAY)
+        time.sleep(SETTLE_DELAY)
 
     def send_data(self, data):
         """Send data byte to LCD.
@@ -371,16 +417,14 @@ class HD44780LCD(object):
         """
         self.control_port.register_select_pin.value = 1
         self.send_byte(data)
-        sleep(SETTLE_DELAY)
+        time.sleep(SETTLE_DELAY)
 
     def pulse_clock(self):
         """Pulse the LCD clock for reading data."""
-        self.control_port.enable_pin.value = 0
-        sleep(PULSE_DELAY)
         self.control_port.enable_pin.value = 1
-        sleep(PULSE_DELAY)
+        time.sleep(PULSE_DELAY)
         self.control_port.enable_pin.value = 0
-        sleep(PULSE_DELAY)
+        time.sleep(PULSE_DELAY)
 
     def write(self, text):
         """Writes a string to the LCD screen.
