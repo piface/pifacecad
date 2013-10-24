@@ -189,10 +189,13 @@ class HD44780LCD(object):
         self.numrows = LCD_MAX_LINES
         self.numcols = LCD_RAM_WIDTH
 
+        self.displaycontrol = 0
+        self.displayfunction = 0
+        self.displaymode = 0
+
         if init_lcd:
             self._pre_init_sequence()  # either 4 bit or 8 bit mode
             self._init_sequence()
-
             self.displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON
             self.update_display_control()
 
