@@ -79,7 +79,7 @@ Configuring LIRC
 See also: http://www.lirc.org/html/configure.html
 
 lircd.conf
----------
+----------
 
 The ``/etc/lirc/lircd.conf`` file tells LIRC about your remote control. Since every
 remote control is different, you need to generate a different config for each
@@ -177,13 +177,13 @@ First we need to add more configurations to our ~/.lircrc::
 
     begin
       prog = myprogram
-      button = 1
+      button = KEY_1
       config = one
     end
 
     begin
       prog = myprogram
-      button = 2
+      button = KEY_1
       config = two
     end
 

@@ -19,12 +19,13 @@ class IRFunctionMap(pifacecommon.interrupts.FunctionMap):
 
 
 class IREventListener(object):
-    """Listens for IR events and calls the registered functions.
+    """Listens for IR events and calls the registered functions. `prog`
+    specifies
 
     >>> def print_ir_code(event):
     ...     print(event.ir_code)
     ...
-    >>> listener = pifacecad.IREventListener(prog="pifacecadtest")
+    >>> listener = pifacecad.IREventListener(prog="myprogram")
     >>> listener.register('one', print_ir_code)
     >>> listener.activate()
     """

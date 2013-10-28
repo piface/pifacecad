@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.2
+------
+- Updated lirc docs.
+
 v2.0.1
 ------
 - Fixed init bug where display_control and other vars would not exist.
