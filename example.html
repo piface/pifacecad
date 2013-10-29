@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; PiFace Control and Display (CAD) 2.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.2 documentation" href="index.html" />
+    <link rel="next" title="LIRC" href="lirc.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lirc.html" title="LIRC"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>    <span class="c"># create PiFace Control and Display object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">backlight_on</span><span class="p">()</span>         <span class="c"># turns the backlight on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">)</span> <span class="c"># writes hello world on to the LCD</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">switches</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>  <span class="c"># reads the value of switch 3</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">switch_port</span><span class="o">.</span><span class="n">value</span>  <span class="c"># reads the value of the switch port</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ir-receiver">
+<h2>IR Receiver<a class="headerlink" href="#ir-receiver" title="Permalink to this headline">¶</a></h2>
+<p>You need to add your LIRC client (your program) to ~/.lircrc:</p>
+<div class="highlight-python"><pre>$ cat ~/.lircrc
+begin
+  prog = pifacecadexample
+  button = 1
+  config = one
+end
+
+begin
+  prog = pifacecadexample
+  button = 2
+  config = two
+end</pre>
+</div>
+<p>Then, register IR codes to functions using <tt class="xref py py-class docutils literal"><span class="pre">IREventListener</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">print_ir_code</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">ir_code</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>  <span class="c"># initialise a PiFace Control and Display board</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">IREventListener</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s">&quot;pifacecadexample&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">&#39;one&#39;</span><span class="p">,</span> <span class="n">print_ir_code</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">&#39;two&#39;</span><span class="p">,</span> <span class="n">print_ir_code</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now when you press 1 or 2 on your remote, &#8220;one&#8221; or &#8220;two&#8221; is printed.</p>
+</div>
+<div class="section" id="interrupts">
+<h2>Interrupts<a class="headerlink" href="#interrupts" title="Permalink to this headline">¶</a></h2>
+<p>Instead of polling the switches we can use the <tt class="xref py py-class docutils literal"><span class="pre">SwitchEventListener</span></tt> to
+register actions that we wish to be called on certain switch events.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">update_pin_text</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">event</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">event</span><span class="o">.</span><span class="n">chip</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pin_num</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;You pressed: &quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">SwitchEventListener</span><span class="p">(</span><span class="n">chip</span><span class="o">=</span><span class="n">cad</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">IODIR_FALLING_EDGE</span><span class="p">,</span> <span class="n">update_pin_text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The screen should update as buttons are pressed. To stop the listener, call
+it&#8217;s <tt class="docutils literal"><span class="pre">deactivate</span></tt> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">deactivate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <tt class="xref py py-class docutils literal"><span class="pre">Event</span></tt> object has some interesting attributes. You can access them
+like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">InputEventListener</span><span class="p">(</span><span class="n">chip</span><span class="o">=</span><span class="n">cad</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">IODIR_RISING_EDGE</span><span class="p">,</span> <span class="k">print</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">listener</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This would print out the event informaion whenever you unpress switch 0:</p>
+<div class="highlight-python"><pre>interrupt_flag:    0b1
+interrupt_capture: 0b11111111
+pin_num:           0
+direction:         1
+chip:              &lt;pifacecad.core.PiFaceCAD object at 0xb682dab0&gt;
+timestamp:         1380893579.447889</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li><a class="reference internal" href="#ir-receiver">IR Receiver</a></li>
+<li><a class="reference internal" href="#interrupts">Interrupts</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="lirc.html"
+                        title="next chapter">LIRC</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/example.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lirc.html" title="LIRC"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Thomas Preston.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

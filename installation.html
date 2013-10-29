@@ -1,0 +1,149 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; PiFace Control and Display (CAD) 2.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.2 documentation" href="index.html" />
+    <link rel="next" title="Examples" href="example.html" />
+    <link rel="prev" title="Welcome to PiFace Control and Display (CAD)’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PiFace Control and Display (CAD)’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Make sure you are using the lastest version of Raspbian:</p>
+<div class="highlight-python"><pre>$ sudo apt-get update
+$ sudo apt-get upgrade</pre>
+</div>
+<p>Install <tt class="docutils literal"><span class="pre">pifacecad</span></tt> (for Python 3 and 2) with the following command:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install python{,3}-pifacecad</pre>
+</div>
+<p>Test by running the <tt class="docutils literal"><span class="pre">sysinfo.py</span></tt> program:</p>
+<div class="highlight-python"><pre>$ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py</pre>
+</div>
+<p>You will need to <a class="reference external" href="lirc.html#setting-up-the-infrared-receiver">configure the IR receiver</a> yourself.</p>
+<div class="section" id="sysinfo-service">
+<h2>SysInfo Service<a class="headerlink" href="#sysinfo-service" title="Permalink to this headline">¶</a></h2>
+<p>You can run <cite>sysinfo</cite> as a service using:</p>
+<div class="highlight-python"><pre>$ sudo service pifacecadsysinfo start</pre>
+</div>
+<p>You can stop the service with:</p>
+<div class="highlight-python"><pre>$ sudo service pifacecadsysinfo stop</pre>
+</div>
+<p>You can enable the service to run at boot (handy for headless Raspberry Pi&#8217;s):</p>
+<div class="highlight-python"><pre>$ sudo update-rc.d pifacecadsysinfo defaults</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#sysinfo-service">SysInfo Service</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to PiFace Control and Display (CAD)&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="example.html"
+                        title="next chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to PiFace Control and Display (CAD)’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Thomas Preston.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

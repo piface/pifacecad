@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LIRC &mdash; PiFace Control and Display (CAD) 2.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.2 documentation" href="index.html" />
+    <link rel="next" title="Creating Custom Bitmaps" href="creating_custom_bitmaps.html" />
+    <link rel="prev" title="Examples" href="example.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="lirc">
+<h1>LIRC<a class="headerlink" href="#lirc" title="Permalink to this headline">¶</a></h1>
+<p>This page contains some information about <a class="reference external" href="http://www.lirc.org/">Linux Infrared Remote Control
+(LIRC)</a> and how to set it up with PiFace CAD and
+the Raspberry Pi.</p>
+<p>LIRC looks something like this:</p>
+<img alt="An image of PiFace Digital with a simple circuit connected." class="align-center" src="_images/lirc.png" style="width: 813px; height: 182px;" />
+<div class="section" id="setting-up-the-infrared-receiver">
+<h2>Setting up the Infrared Receiver<a class="headerlink" href="#setting-up-the-infrared-receiver" title="Permalink to this headline">¶</a></h2>
+<p>First, install lirc:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install lirc</pre>
+</div>
+<p>The latest version of Raspbian should contain the <tt class="docutils literal"><span class="pre">lirc_rpi</span></tt> kernel module.
+It allows you to specify which GPIO pin the Infrared Receiver is attached to.
+On PiFace CAD, the Infrared Receiver is connected to GPIO pin 23. To load the
+module type:</p>
+<div class="highlight-python"><pre>$ sudo modprobe lirc_rpi gpio_in_pin=23</pre>
+</div>
+<p>You can test that it works with the <tt class="docutils literal"><span class="pre">mode2</span></tt> program:</p>
+<div class="highlight-python"><pre>$ sudo kill $(pidof lirc)  # stop lirc using /dev/lirc0
+$ mode2 -d /dev/lirc0</pre>
+</div>
+<p>If, after pressing some buttons, you get a series of pulse/space lengths then
+your Infrared Receiver is working. To make sure that the module is loaded
+each time you boot, add the following lines to <tt class="docutils literal"><span class="pre">/etc/modules</span></tt>:</p>
+<div class="highlight-python"><pre>lirc_dev
+lirc_rpi gpio_in_pin=23</pre>
+</div>
+<p>Update <tt class="docutils literal"><span class="pre">/etc/lirc/hardware.conf</span></tt> to contain the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># /etc/lirc/hardware.conf</span>
+<span class="c">#</span>
+<span class="c"># Arguments which will be used when launching lircd</span>
+<span class="n">LIRCD_ARGS</span><span class="o">=</span><span class="s">&quot;--uinput&quot;</span>
+
+<span class="c">#Don&#39;t start lircmd even if there seems to be a good config file</span>
+<span class="c">#START_LIRCMD=false</span>
+
+<span class="c">#Don&#39;t start irexec, even if a good config file seems to exist.</span>
+<span class="c">#START_IREXEC=false</span>
+
+<span class="c">#Try to load appropriate kernel modules</span>
+<span class="n">LOAD_MODULES</span><span class="o">=</span><span class="n">true</span>
+
+<span class="c"># Run &quot;lircd --driver=help&quot; for a list of supported drivers.</span>
+<span class="n">DRIVER</span><span class="o">=</span><span class="s">&quot;default&quot;</span>
+<span class="c"># usually /dev/lirc0 is the correct setting for systems using udev</span>
+<span class="n">DEVICE</span><span class="o">=</span><span class="s">&quot;/dev/lirc0&quot;</span>
+<span class="n">MODULES</span><span class="o">=</span><span class="s">&quot;lirc_rpi&quot;</span>
+
+<span class="c"># Default configuration files for your hardware if any</span>
+<span class="n">LIRCD_CONF</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+<span class="n">LIRCMD_CONF</span><span class="o">=</span><span class="s">&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Finally, reboot your Rasbperry Pi:</p>
+<div class="highlight-python"><pre>$ sudo reboot</pre>
+</div>
+</div>
+<div class="section" id="configuring-lirc">
+<h2>Configuring LIRC<a class="headerlink" href="#configuring-lirc" title="Permalink to this headline">¶</a></h2>
+<p>See also: <a class="reference external" href="http://www.lirc.org/html/configure.html">http://www.lirc.org/html/configure.html</a></p>
+<div class="section" id="lircd-conf">
+<h3>lircd.conf<a class="headerlink" href="#lircd-conf" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">/etc/lirc/lircd.conf</span></tt> file tells LIRC about your remote control. Since every
+remote control is different, you need to generate a different config for each
+remote. Alternatively you could try and find your remote control config file
+here: <a class="reference external" href="http://lirc.sourceforge.net/remotes/">http://lirc.sourceforge.net/remotes/</a>.</p>
+<p>To generate your own configuration run:</p>
+<div class="highlight-python"><pre>$ sudo irrecord -f -d /dev/lirc0 /etc/lirc/lircd.conf</pre>
+</div>
+<p>and carefully follow the on-screen instructions. At some point it will ask you
+to enter the commands for each button you press. You can list the available
+commands (in another terminal) with:</p>
+<div class="highlight-python"><pre>$ irrecord --list-namespace</pre>
+</div>
+<p>After you have finished, restart the lirc daemon (or reboot) and test your
+remote by running:</p>
+<div class="highlight-python"><pre>$ irw</pre>
+</div>
+<p>Your commands should appear in the console.</p>
+</div>
+<div class="section" id="lircrc-or-etc-lirc-lircrc">
+<h3>~/.lircrc (or /etc/lirc/lircrc)<a class="headerlink" href="#lircrc-or-etc-lirc-lircrc" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">~/.lircrc</span></tt> file is used to configure what other programs see from LIRC.
+See examples in <a class="reference internal" href="#ref-irexec"><em>irexec</em></a> and <a class="reference internal" href="#ref-python-lirc"><em>python-lirc</em></a>.</p>
+<p>See also: <a class="reference external" href="http://www.lirc.org/html/configure.html#lircrc_format">http://www.lirc.org/html/configure.html#lircrc_format</a></p>
+</div>
+</div>
+<div class="section" id="irexec">
+<span id="ref-irexec"></span><h2>irexec<a class="headerlink" href="#irexec" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="Seealso:http://www.lirc.org/html/irexec.html">irexec</a> is a program that runs commands mapped to IR signals. It is configured using the ~/.lircrc file.</p>
+<p>Simple ~/.lircrc:</p>
+<div class="highlight-python"><pre>begin
+    prog = irexec
+    button = KEY_1
+    config = echo &quot;You pressed one&quot;
+    repeat = 0
+end</pre>
+</div>
+<p>Now when you run <tt class="docutils literal"><span class="pre">irexec</span></tt> and press 1 on the remote control <em>You pressed one</em>
+will be printed to the console:</p>
+<div class="highlight-python"><pre>$ irexec
+You pressed one
+You pressed one
+You pressed one</pre>
+</div>
+<p>Here is another example that uses <tt class="docutils literal"><span class="pre">mpc</span></tt> to control <a class="reference external" href="http://www.musicpd.org/">Music Player Daemon</a>:</p>
+<div class="highlight-python"><pre>begin
+    prog = irexec
+    button = KEY_PREVIOUSSONG
+    config = mpc prev
+    repeat = 0
+end
+begin
+    prog = irexec
+    button = KEY_NEXTSONG
+    config = mpc next
+    repeat = 0
+end
+begin
+    prog = irexec
+    button = KEY_PLAY
+    config = mpc play
+    repeat = 1
+end</pre>
+</div>
+</div>
+<div class="section" id="python-lirc">
+<span id="ref-python-lirc"></span><h2>python-lirc<a class="headerlink" href="#python-lirc" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/tompreston/python-lirc">python-lirc</a> is a Python
+extension that allows us to access configs in ~/.lircrc when LIRC receives
+a signal.</p>
+<p>First we need to add more configurations to our ~/.lircrc:</p>
+<div class="highlight-python"><pre>begin
+    prog = irexec
+    button = KEY_1
+    config = echo &quot;You pressed one&quot;
+    repeat = 0
+end
+
+begin
+  prog = myprogram
+  button = KEY_1
+  config = one
+end
+
+begin
+  prog = myprogram
+  button = KEY_1
+  config = two
+end</pre>
+</div>
+<p>Then we can wait for IR codes in Python:</p>
+<div class="highlight-python"><pre>$ python3
+&gt;&gt;&gt; import lirc
+&gt;&gt;&gt; sockid = lirc.init(&quot;myprogram&quot;)
+&gt;&gt;&gt; lirc.nextcode()  # press 1 on remote after this
+[&#x27;one&#x27;]
+&gt;&gt;&gt; lirc.nextcode()  # press 2 on remote after this
+[&#x27;two&#x27;]</pre>
+</div>
+</div>
+<div class="section" id="piface-cad">
+<h2>PiFace CAD<a class="headerlink" href="#piface-cad" title="Permalink to this headline">¶</a></h2>
+<p>PiFace Control and Display provides a wrapper around python-lirc. An example of
+how to use it can be found in <a class="reference external" href="/example.html#ir-receiver">Examples</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LIRC</a><ul>
+<li><a class="reference internal" href="#setting-up-the-infrared-receiver">Setting up the Infrared Receiver</a></li>
+<li><a class="reference internal" href="#configuring-lirc">Configuring LIRC</a><ul>
+<li><a class="reference internal" href="#lircd-conf">lircd.conf</a></li>
+<li><a class="reference internal" href="#lircrc-or-etc-lirc-lircrc">~/.lircrc (or /etc/lirc/lircrc)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#irexec">irexec</a></li>
+<li><a class="reference internal" href="#python-lirc">python-lirc</a></li>
+<li><a class="reference internal" href="#piface-cad">PiFace CAD</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="example.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="creating_custom_bitmaps.html"
+                        title="next chapter">Creating Custom Bitmaps</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/lirc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Thomas Preston.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
