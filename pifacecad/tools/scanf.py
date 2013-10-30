@@ -42,8 +42,9 @@ class UnknownSpecifierError(Exception):
 class LCDScanf(object):
     """Allows the user to input text using the LCD.
 
-    To change mode from moving and editing press switch 5 (rocker switch *in*).
-    Move the rocker switch side to side (switches 6 and 7) to change character.
+    To change mode from moving and editing press switch 5 (navigation switch
+    *in*). Move the navigation switch side to side (switches 6 and 7) to
+    change character.
 
     The available character set is specified using a format string similar to
     printf. Supported character specifiers are::

@@ -1,6 +1,7 @@
 import sys
 import threading
 import pifacecad
+import pifacecad.lcd
 
 # Python 2 barrier hack (if you know a better way, please tell me)
 PY3 = sys.version_info[0] >= 3
@@ -91,7 +92,7 @@ class LCDQuestion(object):
 
         # pad with spaces to overwrite previous answer (ljust)
         prev_ans = self.answers[self._displayed_answer_index]
-        prev_ans_len = max(len(prev_ans), pifacecad.LCD_WIDTH)
+        prev_ans_len = max(len(prev_ans), pifacecad.lcd.LCD_WIDTH)
         answer = self.answers[new_answer_index].ljust(prev_ans_len)
 
         self.cad.lcd.set_cursor(0, 1)

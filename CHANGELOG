@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+v2.0.3
+------
+- Updated documentation. Examples page, creating custom bitmaps and tools.
+- Fixed bug in LCDQuestion.
+
 v2.0.2
 ------
 - Updated lirc docs.
