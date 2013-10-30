@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Creating Custom Bitmaps &mdash; PiFace Control and Display (CAD) 2.0.2 documentation</title>
+    <title>Creating Custom Bitmaps &mdash; PiFace Control and Display (CAD) 2.0.3 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.0.2',
+        VERSION:     '2.0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PiFace Control and Display (CAD) 2.0.2 documentation" href="index.html" />
-    <link rel="next" title="Reference (PiFace CAD)" href="reference.html" />
-    <link rel="prev" title="LIRC" href="lirc.html" /> 
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.3 documentation" href="index.html" />
+    <link rel="next" title="Tools" href="tools.html" />
+    <link rel="prev" title="Examples" href="example.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Reference (PiFace CAD)"
+          <a href="tools.html" title="Tools"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="lirc.html" title="LIRC"
+          <a href="example.html" title="Examples"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -64,25 +64,23 @@ of binary values each describing a line. For example:</p>
 </pre></div>
 </div>
 <p>or as hex:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0xe</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0xc</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">([</span><span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0xe</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0xc</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>or as binary (you can almost see the bitmap here):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">([</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b00010</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b00011</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b00010</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b01110</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b11110</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b01100</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="mi">0</span><span class="n">b00000</span><span class="p">])</span>
+<p>or as binary (you can almost see the bitmap image here):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">([</span><span class="mi">0</span><span class="n">b00010</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b00011</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b00010</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b01110</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b11110</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b01100</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="mi">0</span><span class="n">b00000</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">You can use <a class="reference external" href="http://www.quinapalus.com/hd44780udg.html">this tool</a>
-to help design custom bitmaps.</p>
+to help design custom bitmaps. Make sure you select 5x8.</p>
 </div>
 <p>You store and display custom bitmaps with the following commands:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>
@@ -92,12 +90,8 @@ to help design custom bitmaps.</p>
 </div>
 <p>Here is a complete code example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pifacecad</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># create, store and write the bitmap</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0xe</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0xc</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">])</span>
-<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quaver</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">LCDBitmap</span><span class="p">([</span><span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0xe</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0xc</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">store_custom_bitmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">quaver</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write_custom_bitmap</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
@@ -111,11 +105,11 @@ to help design custom bitmaps.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="lirc.html"
-                        title="previous chapter">LIRC</a></p>
+  <p class="topless"><a href="example.html"
+                        title="previous chapter">Examples</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="next chapter">Reference (PiFace CAD)</a></p>
+  <p class="topless"><a href="tools.html"
+                        title="next chapter">Tools</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/creating_custom_bitmaps.txt"
@@ -148,12 +142,12 @@ to help design custom bitmaps.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Reference (PiFace CAD)"
+          <a href="tools.html" title="Tools"
              >next</a> |</li>
         <li class="right" >
-          <a href="lirc.html" title="LIRC"
+          <a href="example.html" title="Examples"
              >previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

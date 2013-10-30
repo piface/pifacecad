@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tools &mdash; PiFace Control and Display (CAD) 2.0.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.3 documentation" href="index.html" />
+    <link rel="next" title="LIRC" href="lirc.html" />
+    <link rel="prev" title="Creating Custom Bitmaps" href="creating_custom_bitmaps.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lirc.html" title="LIRC"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tools">
+<h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
+<p>There are some tools provided with PiFace Control and Display which simplify
+getting input from a user.</p>
+<div class="section" id="question">
+<h2>Question<a class="headerlink" href="#question" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="reference_tools.html#pifacecad.tools.question.LCDQuestion" title="pifacecad.tools.question.LCDQuestion"><tt class="xref py py-class docutils literal"><span class="pre">pifacecad.tools.question.LCDQuestion</span></tt></a> will display a question on the
+top row and an answer on the  bottom. The user can cycle through answers by
+moving the navigation switch left and right and select an answer by pressing
+the navigation switch in.</p>
+<p>It can be used like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pifacecad.tools.question</span> <span class="kn">import</span> <span class="n">LCDQuestion</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">question</span> <span class="o">=</span> <span class="n">LCDQuestion</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="s">&quot;What is 5 x 2?&quot;</span><span class="p">,</span> <span class="n">answers</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;10&quot;</span><span class="p">,</span> <span class="s">&quot;12&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">answer_index</span> <span class="o">=</span> <span class="n">question</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can pass in an already initialised Control and Display object and also
+specify a custom selector:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pifacecad.tools.question</span> <span class="kn">import</span> <span class="n">LCDQuestion</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">customcad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">customcad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">cursor_off</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">customcad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">blink_off</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">question</span> <span class="o">=</span> <span class="n">LCDQuestion</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="s">&quot;What is 5 x 2?&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">answers</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;10&quot;</span><span class="p">,</span> <span class="s">&quot;12&quot;</span><span class="p">],</span>
+<span class="gp">... </span>                       <span class="n">selector</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">cad</span><span class="o">=</span><span class="n">customcad</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">answer_index</span> <span class="o">=</span> <span class="n">question</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scanf">
+<h2>Scanf<a class="headerlink" href="#scanf" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="reference_tools.html#pifacecad.tools.scanf.LCDScanf" title="pifacecad.tools.scanf.LCDScanf"><tt class="xref py py-class docutils literal"><span class="pre">pifacecad.tools.scanf.LCDScanf</span></tt></a> will display a custom string that
+can be modified using the navigation switch. In &#8216;select&#8217; mode, moving the
+navigation switch left or right (switches 6 and 7) selects a character.
+Change to &#8216;edit&#8217; mode by pressing the navigation switch in (switch 5).
+In edit mode, moving the navigation switch left or right changes the character.</p>
+<p>To return the input, move the cursor under the &#8216;enter&#8217; arrow and press the
+navigation switch in.</p>
+<p>The <cite>LCDScanf</cite> class can be used like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pifacecad.tools.scanf</span> <span class="kn">import</span> <span class="n">LCDScanf</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">LCDScanf</span><span class="p">(</span><span class="s">&quot;Text: </span><span class="si">%c%2i</span><span class="s">%.</span><span class="si">%r</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">())</span>  <span class="c"># user enters things on PiFace C&amp;D</span>
+<span class="go">[&#39;a&#39;, &#39;13&#39;, &#39;!&#39;]</span>
+</pre></div>
+</div>
+<p>The format string defines editable variables using a <cite>%</cite> symbol. The
+format specification is:</p>
+<div class="highlight-python"><pre>c: Characters
+C: Capital Characters
+i: Integers
+d: Intergers
+x: Hexadecimal
+X: Capital Hexadecimal
+.: Punctuation
+m: Custom (specifed by ``custom_values`` in init args)
+r: Return (switch 5 to submit string)</pre>
+</div>
+<p>To add multiple characters in the same variable you can specify a number
+after the <cite>%</cite> symbol. For example, to request that the user enter a two
+digit integer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">LCDScanf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%2i%r</span><span class="s">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">scan</span><span class="p">())</span>
+<span class="go">[&#39;42&#39;]</span>
+</pre></div>
+</div>
+<p>You can use the <cite>m</cite> specifier to enter custom variable values:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">LCDScanf</span><span class="p">(</span><span class="s">&quot;Animal: %m</span><span class="si">%r</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">custom_values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;fish&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">())</span>
+<span class="go">[&#39;fish&#39;]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools</a><ul>
+<li><a class="reference internal" href="#question">Question</a></li>
+<li><a class="reference internal" href="#scanf">Scanf</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="creating_custom_bitmaps.html"
+                        title="previous chapter">Creating Custom Bitmaps</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="lirc.html"
+                        title="next chapter">LIRC</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tools.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lirc.html" title="LIRC"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             >previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Thomas Preston.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

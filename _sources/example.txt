@@ -5,19 +5,49 @@ Examples
 Basic usage
 ===========
 
-::
+Hello, World!::
 
     >>> import pifacecad
 
     >>> cad = pifacecad.PiFaceCAD()    # create PiFace Control and Display object
     >>> cad.lcd.backlight_on()         # turns the backlight on
     >>> cad.lcd.write("Hello, world!") # writes hello world on to the LCD
-    >>>
+
+Reading the switches::
+
     >>> cad.switches[3].value  # reads the value of switch 3
     1
     >>> cad.switch_port.value  # reads the value of the switch port
     4
 
+Cursor control::
+
+    >>> cad.lcd.set_cursor(4, 1)  # set the cursor to col 4 on the second row
+    >>> cad.lcd.cursor_off()      # turns the cursor off
+    >>> cad.lcd.write("3.141592") # writes π to the LCD
+
+    >>> cad.lcd.blink_off()       # turns the blinking off
+    >>> cad.lcd.cursor_on()       # turns the cursor on
+    >>> cad.lcd.home()            # send the cursor home
+
+    >>> cad.lcd.write("PiFace Control\nand Display")  # '\n' starts a new line
+    >>> cad.lcd.clear()           # clear the screen (also sends the cursor home)
+
+The LCD has more RAM than just the 16x2 characters that you can see::
+
+    >>> cad.lcd.write("Something really, really long.")
+    >>> cad.lcd.move_right()
+    >>> cad.lcd.move_left()
+    >>> cad.lcd.see_cursor()  # move the display so that we can see the cursor
+
+The `viewport_corner` variable describes which column the top left display
+character is showing from RAM::
+
+    >>> cad.lcd.viewport_corner       # inspect the viewport_corner variable
+    8
+    >>> cad.lcd.viewport_corner = 15  # set the viewport_corner variable
+
+You can also `create your own custom bitmaps <creating_custom_bitmaps.html>`_.
 
 IR Receiver
 ===========

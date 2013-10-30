@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; PiFace Control and Display (CAD) 2.0.2 documentation</title>
+    <title>Examples &mdash; PiFace Control and Display (CAD) 2.0.3 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.0.2',
+        VERSION:     '2.0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PiFace Control and Display (CAD) 2.0.2 documentation" href="index.html" />
-    <link rel="next" title="LIRC" href="lirc.html" />
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.3 documentation" href="index.html" />
+    <link rel="next" title="Creating Custom Bitmaps" href="creating_custom_bitmaps.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
   <body>
@@ -40,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="lirc.html" title="LIRC"
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,18 +58,49 @@
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basic-usage">
 <h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Hello, World!:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pifacecad</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">PiFaceCAD</span><span class="p">()</span>    <span class="c"># create PiFace Control and Display object</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">backlight_on</span><span class="p">()</span>         <span class="c"># turns the backlight on</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">)</span> <span class="c"># writes hello world on to the LCD</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">switches</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>  <span class="c"># reads the value of switch 3</span>
+</pre></div>
+</div>
+<p>Reading the switches:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">switches</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>  <span class="c"># reads the value of switch 3</span>
 <span class="go">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">switch_port</span><span class="o">.</span><span class="n">value</span>  <span class="c"># reads the value of the switch port</span>
 <span class="go">4</span>
 </pre></div>
 </div>
+<p>Cursor control:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c"># set the cursor to col 4 on the second row</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">cursor_off</span><span class="p">()</span>      <span class="c"># turns the cursor off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;3.141592&quot;</span><span class="p">)</span> <span class="c"># writes π to the LCD</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">blink_off</span><span class="p">()</span>       <span class="c"># turns the blinking off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">cursor_on</span><span class="p">()</span>       <span class="c"># turns the cursor on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>            <span class="c"># send the cursor home</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;PiFace Control</span><span class="se">\n</span><span class="s">and Display&quot;</span><span class="p">)</span>  <span class="c"># &#39;\n&#39; starts a new line</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>           <span class="c"># clear the screen (also sends the cursor home)</span>
+</pre></div>
+</div>
+<p>The LCD has more RAM than just the 16x2 characters that you can see:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Something really, really long.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">move_right</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">move_left</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">see_cursor</span><span class="p">()</span>  <span class="c"># move the display so that we can see the cursor</span>
+</pre></div>
+</div>
+<p>The <cite>viewport_corner</cite> variable describes which column the top left display
+character is showing from RAM:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">viewport_corner</span>       <span class="c"># inspect the viewport_corner variable</span>
+<span class="go">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span><span class="o">.</span><span class="n">lcd</span><span class="o">.</span><span class="n">viewport_corner</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c"># set the viewport_corner variable</span>
+</pre></div>
+</div>
+<p>You can also <a class="reference external" href="creating_custom_bitmaps.html">create your own custom bitmaps</a>.</p>
 </div>
 <div class="section" id="ir-receiver">
 <h2>IR Receiver<a class="headerlink" href="#ir-receiver" title="Permalink to this headline">¶</a></h2>
@@ -164,8 +195,8 @@ timestamp:         1380893579.447889</pre>
   <p class="topless"><a href="installation.html"
                         title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="lirc.html"
-                        title="next chapter">LIRC</a></p>
+  <p class="topless"><a href="creating_custom_bitmaps.html"
+                        title="next chapter">Creating Custom Bitmaps</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/example.txt"
@@ -198,12 +229,12 @@ timestamp:         1380893579.447889</pre>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="lirc.html" title="LIRC"
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
              >next</a> |</li>
         <li class="right" >
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

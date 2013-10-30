@@ -20,7 +20,7 @@ Links:
     - `Blog <http://pifacedigital.wordpress.com/>`_
     - `GitHub <https://github.com/piface/pifacecad/>`_
     - `PyPI <https://pypi.python.org/pypi/pifacecad/>`_
-    - `Create Custom Bitmaps <http://www.quinapalus.com/hd44780udg.html>`_
+    - `Custom Bitmaps Generator <http://www.quinapalus.com/hd44780udg.html>`_
 
 Contents:
 
@@ -29,8 +29,9 @@ Contents:
 
    installation
    example
-   lirc
    creating_custom_bitmaps
+   tools
+   lirc
    reference
    reference_tools
 
