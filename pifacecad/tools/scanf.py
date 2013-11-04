@@ -52,7 +52,7 @@ class LCDScanf(object):
         c: Characters
         C: Capital Characters
         i: Integers
-        d: Intergers
+        d: Integers
         x: Hexadecimal
         X: Capital Hexadecimal
         .: Punctuation
@@ -64,13 +64,13 @@ class LCDScanf(object):
 
     For example:
 
-        >>> scanner = pifacecadtools.LCDScanf("Text: %c%2i%.%r")
+        >>> scanner = pifacecad.tools.LCDScanf("Text: %c%2i%.%r")
         >>> print(scanner.scan())  # user enters things on PiFaceCAD
         ['a', '13', '!']
 
     You can also specify custom values:
 
-        >>> scanner = pifacecadtools.LCDScanf(
+        >>> scanner = pifacecad.tools.LCDScanf(
         ...     "Animal: %m%r",
         ...     custom_values=('cat', 'dog', 'fish')
         ... )

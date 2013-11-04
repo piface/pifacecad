@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.4
+------
+- Fixed a typo in the docs.
+
 v2.0.3
 ------
 - Updated documentation. Examples page, creating custom bitmaps and tools.
