@@ -63,9 +63,11 @@ class LCDQuestion(object):
 
         # wait for user input
         listener = pifacecad.SwitchEventListener(self.cad)
-        listener.register(7, pifacecad.IODIR_ON, next_answer)
-        listener.register(6, pifacecad.IODIR_ON, previous_answer)
-        listener.register(5, pifacecad.IODIR_ON, select_answer_switch_pressed)
+        listener.register(7, pifacecad.IODIR_ON, self.next_answer)
+        listener.register(6, pifacecad.IODIR_ON, self.previous_answer)
+        listener.register(5,
+                          pifacecad.IODIR_ON,
+                          self.select_answer_switch_pressed)
         listener.activate()
 
         self.wait_for_return_string = threading.Barrier(2)
