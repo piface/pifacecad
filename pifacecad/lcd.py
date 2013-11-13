@@ -3,7 +3,7 @@ import time
 import pifacecommon.mcp23s17
 
 
-# outputs
+# mcp23s17 GPIOB to HD44780 pin map
 PH_PIN_D4 = 0
 PH_PIN_D5 = 1
 PH_PIN_D6 = 2

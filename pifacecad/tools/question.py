@@ -68,7 +68,6 @@ class LCDQuestion(object):
         listener.register(5,
                           pifacecad.IODIR_ON,
                           self.select_answer_switch_pressed)
-        listener.activate()
 
         self.wait_for_return_string = threading.Barrier(2)
         listener.activate()
