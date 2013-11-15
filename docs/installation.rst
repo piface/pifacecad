@@ -15,7 +15,7 @@ Test by running the ``sysinfo.py`` program::
 
     $ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
 
-You will need to `configure the IR receiver <lirc.html#setting-up-the-infrared-receiver>`_ yourself.
+You will need to `configure the IR receiver <lirc.html#setting-up-the-infrared-receiver>`_ yourself. More examples can be found in `/usr/share/doc/python3-pifacecad/examples/` (which may need unzipping using `gunzip`).
 
 SysInfo Service
 ===============

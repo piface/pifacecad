@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+v2.0.6
+------
+- Added reference to examples location after installation instructions.
+- Added included examples section in docs.
+
 v2.0.5
 ------
 - Fixed a bug in LCDQuestion.
