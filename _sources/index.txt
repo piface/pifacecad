@@ -29,6 +29,7 @@ Contents:
 
    installation
    example
+   included_examples
    creating_custom_bitmaps
    tools
    lirc

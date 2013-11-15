@@ -61,7 +61,7 @@ format specification is::
     c: Characters
     C: Capital Characters
     i: Integers
-    d: Intergers
+    d: Integers
     x: Hexadecimal
     X: Capital Hexadecimal
     .: Punctuation

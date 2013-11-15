@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Python Module Index &mdash; PiFace Control and Display (CAD) 2.0.6 documentation</title>
+    <title>PiFace Control and Display Diagram &mdash; PiFace Control and Display (CAD) 2.0.6 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,10 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PiFace Control and Display (CAD) 2.0.6 documentation" href="index.html" />
- 
-
-
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.6 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="#" title="Python Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
       </ul>
@@ -49,49 +46,32 @@
         <div class="bodywrapper">
           <div class="body">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-p"><strong>p</strong></a>
-   </div>
-
-   <table class="indextable modindextable" cellspacing="0" cellpadding="2">
-     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
-     <tr class="cap" id="cap-p"><td></td><td>
-       <strong>p</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <tt class="xref">pifacecad</tt></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&nbsp;&nbsp;&nbsp;
-       <a href="reference.html#module-pifacecad.core"><tt class="xref">pifacecad.core</tt></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&nbsp;&nbsp;&nbsp;
-       <a href="reference.html#module-pifacecad.ir"><tt class="xref">pifacecad.ir</tt></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&nbsp;&nbsp;&nbsp;
-       <a href="reference.html#module-pifacecad.lcd"><tt class="xref">pifacecad.lcd</tt></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&nbsp;&nbsp;&nbsp;
-       <a href="reference_tools.html#module-pifacecad.tools.question"><tt class="xref">pifacecad.tools.question</tt></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&nbsp;&nbsp;&nbsp;
-       <a href="reference_tools.html#module-pifacecad.tools.scanf"><tt class="xref">pifacecad.tools.scanf</tt></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="piface-control-and-display-diagram">
+<h1>PiFace Control and Display Diagram<a class="headerlink" href="#piface-control-and-display-diagram" title="Permalink to this headline">¶</a></h1>
+<p>PiFace Control and Display is connected to the Raspberry Pi through an SPI
+port expander (MCP23S17, chip select = 1). Here is a diagram of pin locations:</p>
+<div class="highlight-python"><pre>               | PortA0 |
+               | PortA1 |
+               | PortA2 |
+Input Switches | PortA3 |
+               | PortA4 |
+               | PortA5 |
+               | PortA6 |
+               | PortA7 | -- MCP23S17 -- SPI -- Raspberry Pi
+HD44780 Data 4 | PortB0 |        |                  |
+HD44780 Data 5 | PortB1 |        |             GPIO Pin 23 -- IR
+HD44780 Data 6 | PortB2 |   Interrupts ------- GPIO Pin 25
+HD44780 Data 7 | PortB3 |
+HD44780 Enable | PortB4 |
+HD44780 RW     | PortB5 |
+HD44780 RS     | PortB6 |
+Backlight      | PortB7 |</pre>
+</div>
+<p>The HD44780 LCD must be configured to be in 4-bit mode since we only have
+4 data connections.</p>
+<p>MCP23S17 datasheet: <a class="reference external" href="http://ww1.microchip.com/downloads/en/devicedoc/21952b.pdf">http://ww1.microchip.com/downloads/en/devicedoc/21952b.pdf</a>
+HD44780 datasheet: <a class="reference external" href="https://www.sparkfun.com/datasheets/LCD/HD44780.pdf">https://www.sparkfun.com/datasheets/LCD/HD44780.pdf</a></p>
+</div>
 
 
           </div>
@@ -99,6 +79,11 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/pifacecad_diagram.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -123,7 +108,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="#" title="Python Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
       </ul>

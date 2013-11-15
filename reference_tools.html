@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Reference (PiFace CAD Tools) &mdash; PiFace Control and Display (CAD) 2.0.3 documentation</title>
+    <title>Reference (PiFace CAD Tools) &mdash; PiFace Control and Display (CAD) 2.0.6 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '2.0.3',
+        VERSION:     '2.0.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PiFace Control and Display (CAD) 2.0.3 documentation" href="index.html" />
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.6 documentation" href="index.html" />
     <link rel="prev" title="Reference (PiFace CAD)" href="reference.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="reference.html" title="Reference (PiFace CAD)"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -103,7 +103,7 @@ printf. Supported character specifiers are:</p>
 <div class="highlight-python"><pre>c: Characters
 C: Capital Characters
 i: Integers
-d: Intergers
+d: Integers
 x: Hexadecimal
 X: Capital Hexadecimal
 .: Punctuation
@@ -113,13 +113,13 @@ r: Return (switch 5 to submit string)</pre>
 <p>You must prefix them with a <tt class="docutils literal"><span class="pre">%</span></tt> symbol and you can also specify a number
 argument. Each specifier is returned as an element in a list.</p>
 <p>For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">pifacecadtools</span><span class="o">.</span><span class="n">LCDScanf</span><span class="p">(</span><span class="s">&quot;Text: </span><span class="si">%c%2i</span><span class="s">%.</span><span class="si">%r</span><span class="s">&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">LCDScanf</span><span class="p">(</span><span class="s">&quot;Text: </span><span class="si">%c%2i</span><span class="s">%.</span><span class="si">%r</span><span class="s">&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">())</span>  <span class="c"># user enters things on PiFaceCAD</span>
 <span class="go">[&#39;a&#39;, &#39;13&#39;, &#39;!&#39;]</span>
 </pre></div>
 </div>
 <p>You can also specify custom values:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">pifacecadtools</span><span class="o">.</span><span class="n">LCDScanf</span><span class="p">(</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">scanner</span> <span class="o">=</span> <span class="n">pifacecad</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">LCDScanf</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="s">&quot;Animal: %m</span><span class="si">%r</span><span class="s">&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">custom_values</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;cat&#39;</span><span class="p">,</span> <span class="s">&#39;dog&#39;</span><span class="p">,</span> <span class="s">&#39;fish&#39;</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -278,7 +278,7 @@ being treated as a string.</p>
         <li class="right" >
           <a href="reference.html" title="Reference (PiFace CAD)"
              >previous</a> |</li>
-        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.3 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

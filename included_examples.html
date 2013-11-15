@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Included Examples &mdash; PiFace Control and Display (CAD) 2.0.6 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PiFace Control and Display (CAD) 2.0.6 documentation" href="index.html" />
+    <link rel="next" title="Creating Custom Bitmaps" href="creating_custom_bitmaps.html" />
+    <link rel="prev" title="Examples" href="example.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="included-examples">
+<h1>Included Examples<a class="headerlink" href="#included-examples" title="Permalink to this headline">¶</a></h1>
+<p>The PiFace Control and Display Python libraries include some example programs
+at <tt class="docutils literal"><span class="pre">/usr/share/doc/python3-pifacecad/examples/</span></tt>. You are encouraged to
+modify and improve them.</p>
+<p>You can also find the examples on <a class="reference external" href="https://github.com/piface/pifacecad/tree/master/examples">GitHub</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some of the included examples are zipped (<cite>.gz</cite>) and require
+unzipping before they can be used.</p>
+</div>
+<div class="section" id="internet-radio">
+<h2>Internet Radio<a class="headerlink" href="#internet-radio" title="Permalink to this headline">¶</a></h2>
+<p>An internet radio with IR remote control features.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to use the infrared remote control features of the radio
+you must first <a class="reference external" href="/lirc.html">configure LIRC</a>.</p>
+</div>
+<p>The internet radio requires the program <tt class="docutils literal"><span class="pre">mplayer</span></tt> to be installed in order to
+play audio streams. Install it with:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install mplayer</pre>
+</div>
+<p>Unzip the radio:</p>
+<div class="highlight-python"><pre>$ gunzip /usr/share/doc/python3-pifacecad/examples/radio.py.gz</pre>
+</div>
+<p>Run the radio:</p>
+<div class="highlight-python"><pre>$ python3 /usr/share/doc/python3-pifacecad/examples/radio.py</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Navigation left</td>
+<td>Previous station</td>
+</tr>
+<tr class="row-odd"><td>Navigation right</td>
+<td>Next station</td>
+</tr>
+<tr class="row-even"><td>Navigation in</td>
+<td>Stop/Start playing</td>
+</tr>
+<tr class="row-odd"><td>Control 0</td>
+<td>Station Preset 0</td>
+</tr>
+<tr class="row-even"><td>Control 1</td>
+<td>Station Preset 1</td>
+</tr>
+<tr class="row-odd"><td>Control 2</td>
+<td>Station Preset 2</td>
+</tr>
+<tr class="row-even"><td>Control 3</td>
+<td>Station Preset 3</td>
+</tr>
+<tr class="row-odd"><td>Control 4</td>
+<td>Exit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="hangman">
+<h2>Hangman<a class="headerlink" href="#hangman" title="Permalink to this headline">¶</a></h2>
+<p>A game of hangman. Guess which letters are in the word. To many incorrect
+guesses and, well, you know the rest.</p>
+<p>Unzip and run hangman:</p>
+<div class="highlight-python"><pre>$ gunzip /usr/share/doc/python3-pifacecad/examples/radio.py.gz
+$ python3 /usr/share/doc/python3-pifacecad/examples/radio.py</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Navigation left</td>
+<td>Move cursor/Change letter</td>
+</tr>
+<tr class="row-odd"><td>Navigation right</td>
+<td>Move cursor/Change letter</td>
+</tr>
+<tr class="row-even"><td>Navigation in</td>
+<td>Change mode/enter</td>
+</tr>
+</tbody>
+</table>
+<p>See hangman in action on <a class="reference external" href="http://youtu.be/XAM5vru8ffY">YouTube</a>.</p>
+</div>
+<div class="section" id="traintimes">
+<h2>Traintimes<a class="headerlink" href="#traintimes" title="Permalink to this headline">¶</a></h2>
+<p>Shows UK train times from Manchester Picadilly (MAN) to various other stations.
+Have a peek at the code to the alter which station you are departing from.</p>
+<p><tt class="docutils literal"><span class="pre">traintimes.py</span></tt> depends on <a class="reference external" href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup 4</a>. Install it with:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install python3-bs4</pre>
+</div>
+<p>Then unzip and run traintimes:</p>
+<div class="highlight-python"><pre>$ gunzip /usr/share/doc/python3-pifacecad/examples/traintimes.py.gz
+$ python3 /usr/share/doc/python3-pifacecad/examples/traintimes.py</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Navigation left</td>
+<td>Previous destination station</td>
+</tr>
+<tr class="row-odd"><td>Navigation right</td>
+<td>Next destination station</td>
+</tr>
+<tr class="row-even"><td>Navigation in</td>
+<td>Refresh</td>
+</tr>
+<tr class="row-odd"><td>Control 4</td>
+<td>Exit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tweets">
+<h2>Tweets<a class="headerlink" href="#tweets" title="Permalink to this headline">¶</a></h2>
+<p>Shows latest tweets.</p>
+<p>Twitter requires the <a class="reference external" href="http://mike.verdone.ca/twitter/">Python Twitter Tools</a>
+module to be installed:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install easy_install3
+$ sudo easy_install3 twitter</pre>
+</div>
+<p>Unzip and run tweets:</p>
+<div class="highlight-python"><pre>$ gunzip /usr/share/doc/python3-pifacecad/examples/tweets.py.gz
+$ python3 /usr/share/doc/python3-pifacecad/examples/tweets.py</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Navigation left</td>
+<td>Previous tweet</td>
+</tr>
+<tr class="row-odd"><td>Navigation right</td>
+<td>Next tweet</td>
+</tr>
+<tr class="row-even"><td>Navigation in</td>
+<td>Refresh</td>
+</tr>
+<tr class="row-odd"><td>Control 4</td>
+<td>Exit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="weather">
+<h2>Weather<a class="headerlink" href="#weather" title="Permalink to this headline">¶</a></h2>
+<p>Shows current weather information. Unzip and run weather:</p>
+<div class="highlight-python"><pre>$ gunzip /usr/share/doc/python3-pifacecad/examples/weather.py.gz
+$ python3 /usr/share/doc/python3-pifacecad/examples/weather.py</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="48%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Button</th>
+<th class="head">Function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Navigation left</td>
+<td>Previous location</td>
+</tr>
+<tr class="row-odd"><td>Navigation right</td>
+<td>Next location</td>
+</tr>
+<tr class="row-even"><td>Navigation in</td>
+<td>Refresh</td>
+</tr>
+<tr class="row-odd"><td>Control 4</td>
+<td>Exit</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Included Examples</a><ul>
+<li><a class="reference internal" href="#internet-radio">Internet Radio</a></li>
+<li><a class="reference internal" href="#hangman">Hangman</a></li>
+<li><a class="reference internal" href="#traintimes">Traintimes</a></li>
+<li><a class="reference internal" href="#tweets">Tweets</a></li>
+<li><a class="reference internal" href="#weather">Weather</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="example.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="creating_custom_bitmaps.html"
+                        title="next chapter">Creating Custom Bitmaps</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/included_examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="creating_custom_bitmaps.html" title="Creating Custom Bitmaps"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="index.html">PiFace Control and Display (CAD) 2.0.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Thomas Preston.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
