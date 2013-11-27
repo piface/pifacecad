@@ -14,10 +14,10 @@ Internet Radio
 An internet radio with IR remote control features.
 
 .. note:: In order to use the infrared remote control features of the radio
-          you must first `configure LIRC <lirc.html>`_ and add some remote
-          control button configurations to ~/.lircrc. Example configurations
-          can be found in
-          `/usr/share/doc/python3-pifacecad/examples/radiolircrc`.
+          you must first `configure LIRC <lirc.html>`_ and configure the
+          buttons  in ``/usr/share/doc/python3-pifacecad/examples/radiolircrc``
+          so that they match the buttons on your remote (in
+          ``/etc/lirc/lircd.conf``).
 
 The internet radio requires the program ``mplayer`` to be installed in order to
 play audio streams. Install it with::
