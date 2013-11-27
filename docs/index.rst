@@ -19,7 +19,7 @@ PiFace Control and Display has eight inputs switches, and IR receiver and an
 Links:
     - `Blog <http://pifacedigital.wordpress.com/>`_
     - `GitHub <https://github.com/piface/pifacecad/>`_
-    - `PyPI <https://pypi.python.org/pypi/pifacecad/>`_
+    - `C Library <http://piface.github.io/libpifacecad/>`_
     - `Custom Bitmaps Generator <http://www.quinapalus.com/hd44780udg.html>`_
 
 Contents:

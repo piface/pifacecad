@@ -201,4 +201,4 @@ PiFace CAD
 ==========
 
 PiFace Control and Display provides a wrapper around python-lirc. An example of
-how to use it can be found in `Examples </example.html#ir-receiver>`_.
+how to use it can be found in `Examples <example.html#ir-receiver>`_.
