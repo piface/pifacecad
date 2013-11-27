@@ -17,6 +17,17 @@ LIRC looks something like this:
 
 Setting up the Infrared Receiver
 ================================
+Download and run the setup script::
+
+    $ wget https://raw.github.com/piface/pifacecad/master/bin/setup_pifacecad_lirc.sh
+    $ chmod +x setup_pifacecad_lirc.sh
+    $ sudo ./setup_pifacecad_lirc.sh
+
+Alternatively you can set up the receiver manually.
+
+.. note:: The following instructions are for a manual set up of the above
+          script. If you have run the script above, you can skip straight
+          to :ref:`configuring-lirc`.
 
 First, install lirc::
 
@@ -72,6 +83,8 @@ Finally, reboot your Rasbperry Pi::
 
     $ sudo reboot
 
+
+.. _configuring-lirc:
 
 Configuring LIRC
 ================

@@ -51,8 +51,8 @@ setup_modules() {
     backup_file $MODULES_FILE
     # add "lirc_dev" and "lirc_rpi gpio_in_pin=23" to $MODULES_FILE
     for line in "lirc_dev" "lirc_rpi gpio_in_pin=23"; do
-        if ! grep -q $line $MODULES_FILE; then
-            echo $line >> $MODULES_FILE
+        if ! grep -q "$line" $MODULES_FILE; then
+            echo "$line" >> $MODULES_FILE
         fi
     done
 }
