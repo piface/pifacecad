@@ -63,6 +63,18 @@ the Raspberry Pi.</p>
 <img alt="An image of PiFace Digital with a simple circuit connected." class="align-center" src="_images/lirc.png" style="width: 813px; height: 182px;" />
 <div class="section" id="setting-up-the-infrared-receiver">
 <h2>Setting up the Infrared Receiver<a class="headerlink" href="#setting-up-the-infrared-receiver" title="Permalink to this headline">¶</a></h2>
+<p>Download and run the setup script:</p>
+<div class="highlight-python"><pre>$ wget https://raw.github.com/piface/pifacecad/master/bin/setup_pifacecad_lirc.sh
+$ chmod +x setup_pifacecad_lirc.sh
+$ sudo ./setup_pifacecad_lirc.sh</pre>
+</div>
+<p>Alternatively you can set up the receiver manually.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following instructions are for a manual set up of the above
+script. If you have run the script above, you can skip straight
+to <a class="reference internal" href="#configuring-lirc"><em>Configuring LIRC</em></a>.</p>
+</div>
 <p>First, install lirc:</p>
 <div class="highlight-python"><pre>$ sudo apt-get install lirc</pre>
 </div>
@@ -113,7 +125,7 @@ lirc_rpi gpio_in_pin=23</pre>
 </div>
 </div>
 <div class="section" id="configuring-lirc">
-<h2>Configuring LIRC<a class="headerlink" href="#configuring-lirc" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Configuring LIRC<a class="headerlink" href="#configuring-lirc" title="Permalink to this headline">¶</a></h2>
 <p>See also: <a class="reference external" href="http://www.lirc.org/html/configure.html">http://www.lirc.org/html/configure.html</a></p>
 <div class="section" id="lircd-conf">
 <h3>lircd.conf<a class="headerlink" href="#lircd-conf" title="Permalink to this headline">¶</a></h3>
@@ -219,7 +231,7 @@ end</pre>
 <div class="section" id="piface-cad">
 <h2>PiFace CAD<a class="headerlink" href="#piface-cad" title="Permalink to this headline">¶</a></h2>
 <p>PiFace Control and Display provides a wrapper around python-lirc. An example of
-how to use it can be found in <a class="reference external" href="/example.html#ir-receiver">Examples</a>.</p>
+how to use it can be found in <a class="reference external" href="example.html#ir-receiver">Examples</a>.</p>
 </div>
 </div>
 
