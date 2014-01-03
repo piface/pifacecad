@@ -1,36 +1,48 @@
 import os
 import sys
+import unittest
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
 import pifacecad
 import pifacecad.tools
 
-pifacecad.init()
 
-# question
-# ANSWERS = (
-#     "Because I said so",
-#     "Why not?",
-#     "Maybe",
-#     "42"
-# )
+class TestLCDScanf(unittest.TestCase):
 
-# question = pifacecadtools.LCDQuestion(question="Why?", answers=ANSWERS)
+    def setUp(self):
+        self.cad = pifacecad.PiFaceCAD()
+        self.cad.lcd.set_cursor(1, 1)
 
-# ans_index = question.ask()
-# print("You selected '%s'" % ANSWERS[ans_index])
+    def test_scanner(self):
+        correct_answer = [2, "bc", "apple"]
+        print("Enter", correct_answer)
+        scanner = pifacecad.tools.LCDScanf(format="%i %2c %m%r",
+                                           custom_values=("orange", "apple"),
+                                           cad=self.cad)
+        answer = scanner.scan()
+        self.assertEqual(answer, correct_answer)
 
-# scanf
-cad = pifacecad.PiFaceCAD()
-cad.lcd.set_cursor(1, 1)
-try:
-    scanner = pifacecad.tools.LCDScanf(
-        format="%i%2m%i%r",
-        custom_values=("a", "bb", "ccc"),
-        cad=cad
-    )
-    x = scanner.scan()
-except KeyboardInterrupt:
-    print(":-(")
-else:
-    print(x)
+    def tearDown(self):
+        self.cad.lcd.clear()
+
+
+class TestLCDQuestion(unittest.TestCase):
+
+    def test_question(self):
+        correct_answer = "Why not?"
+        print("Enter", correct_answer)
+
+        question = pifacecad.tools.LCDQuestion
+        the_answers = ("Because I said so",
+                       "Why not?",
+                       "Maybe",
+                       "42")
+
+        question = pifacecad.tools.LCDQuestion(question="Why?",
+                                               answers=the_answers)
+        answer_index = question.ask()
+        self.assertEqual(answer_index, the_answers.index(correct_answer))
+
+
+if __name__ == "__main__":
+    unittest.main()
