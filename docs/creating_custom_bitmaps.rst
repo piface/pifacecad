@@ -8,15 +8,16 @@ bitmap describes a single character on the LCD screen (5x8 pixels).
 To create a custom bitmap you instantiate an :class:`LCDBitmap` which takes a list
 of binary values each describing a line. For example::
 
-    >>> quaver = pifacecad.LCDBitmap([2, 3, 2, 14, 30, 12, 0])
+    >>> quaver = pifacecad.LCDBitmap([0, 2, 3, 2, 14, 30, 12, 0])
 
 or as hex::
 
-    >>> quaver = pifacecad.LCDBitmap([0x2, 0x3, 0x2, 0xe, 0x1e, 0xc, 0x0])
+    >>> quaver = pifacecad.LCDBitmap([0x0, 0x2, 0x3, 0x2, 0xe, 0x1e, 0xc, 0x0])
 
 or as binary (you can almost see the bitmap image here)::
 
-    >>> quaver = pifacecad.LCDBitmap([0b00010,
+    >>> quaver = pifacecad.LCDBitmap([0b00000,
+    ...                               0b00010,
     ...                               0b00011,
     ...                               0b00010,
     ...                               0b01110,
@@ -37,6 +38,6 @@ Here is a complete code example::
 
     >>> import pifacecad
     >>> cad = pifacecad.PiFaceCAD()
-    >>> quaver = pifacecad.LCDBitmap([0x2, 0x3, 0x2, 0xe, 0x1e, 0xc, 0x0])
+    >>> quaver = pifacecad.LCDBitmap([0x0, 0x2, 0x3, 0x2, 0xe, 0x1e, 0xc, 0x0])
     >>> cad.lcd.store_custom_bitmap(0, quaver)
     >>> cad.lcd.write_custom_bitmap(0)

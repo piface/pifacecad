@@ -100,8 +100,13 @@ class Radio(object):
     def play(self):
         """Plays the current radio station."""
         print("Playing {}.".format(self.current_station['name']))
-        play_command = "mplayer -quiet {stationsource}".format(
-            stationsource=self.current_station['source'])
+        # check if is m3u and send -playlist switch to mplayer
+        if self.current_station['source'].split("?")[0][-3:] in ['m3u', 'pls']:
+            play_command = "mplayer -quiet -playlist {stationsource}".format(
+		        stationsource=self.current_station['source'])        			
+        else:
+            play_command = "mplayer -quiet {stationsource}".format(
+                stationsource=self.current_station['source'])        
         self.playing_process = subprocess.Popen(
             play_command,
             #stdout=subprocess.PIPE,
