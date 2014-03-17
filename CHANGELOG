@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.7
+------
+- Fixed bug in sysinfo, using floats instead.
+
 v2.0.6
 ------
 - Added reference to examples location after installation instructions.
