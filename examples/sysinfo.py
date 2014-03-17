@@ -31,8 +31,8 @@ def get_my_temp():
 
 
 def get_my_free_mem():
-    total_mem = int(run_cmd(TOTAL_MEM_CMD))
-    used_mem = int(run_cmd(USED_MEM_CMD))
+    total_mem = float(run_cmd(TOTAL_MEM_CMD))
+    used_mem = float(run_cmd(USED_MEM_CMD))
     mem_perc = used_mem / total_mem
     return "{:.1%}".format(mem_perc)
 
