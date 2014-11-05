@@ -1,1 +1,2 @@
 pifacecommon==4.0.0
+python-lirc==1.2.1
