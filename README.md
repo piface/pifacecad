@@ -31,4 +31,4 @@ Test by running the `sysinfo.py` program:
 
     $ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
 
-You will need to [configure the IR receiver](http://piface.github.io/pifacecad/lirc.html#setting-up-the-infrared-receiver>`_ yourself).
+You will need to [configure the IR receiver](http://pifacecad.readthedocs.org/en/latest/lirc.html).
