@@ -9,7 +9,7 @@ Contrast is adjusted with screwdriver + screw by IR node.
 Documentation
 =============
 
-[http://piface.github.io/pifacecad/](http://piface.github.io/pifacecad/)
+[http://pifacecad.readthedocs.org/](http://pifacecad.readthedocs.org/)
 
 You can also find the documentation and some examples installed at:
 
