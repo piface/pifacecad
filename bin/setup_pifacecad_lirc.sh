@@ -5,6 +5,23 @@
 MODULES_FILE="/etc/modules"
 HARDWARECONF_FILE="/etc/lirc/hardware.conf"
 LIRCD_FILE="/etc/lirc/lircd.conf"
+BOOTCONFIG="/boot/config.txt"
+
+#=======================================================================
+# NAME: version less than or equal to
+# DESCRIPTION: True if version in first arg <= version in second arg
+#=======================================================================
+verlte() {
+    [  "$1" = "`echo -e "$1\n$2" | sort -V | head -n1`" ]
+}
+
+#=======================================================================
+# NAME: version less than
+# DESCRIPTION: True if version in first arg < version in second arg
+#=======================================================================
+verlt() {
+    [ "$1" = "$2" ] && return 1 || verlte $1 $2
+}
 
 #=======================================================================
 # NAME: issue_warning
@@ -12,8 +29,12 @@ LIRCD_FILE="/etc/lirc/lircd.conf"
 #=======================================================================
 issue_warning() {
     echo "This script will overwrite the following files:"
-    echo $MODULES_FILE
     echo $HARDWARECONF_FILE
+    if [ verlt $(uname -r) 3.18 ]; then
+        echo $MODULES_FILE
+    else
+        echo $BOOTCONFIG
+    fi
     echo "Do you wish to continue?"
     select yn in "Yes" "No"; do
         case $yn in
@@ -47,14 +68,24 @@ install_lirc() {
 # DESCRIPTION: Add appropriate kernel modules.
 #=======================================================================
 setup_modules() {
-    echo "Configuring modules."
-    backup_file $MODULES_FILE
-    # add "lirc_dev" and "lirc_rpi gpio_in_pin=23" to $MODULES_FILE
-    for line in "lirc_dev" "lirc_rpi gpio_in_pin=23"; do
-        if ! grep -q "$line" $MODULES_FILE; then
-            echo "$line" >> $MODULES_FILE
+    if [ verlt $(uname -r) 3.18 ]; then
+        # old way for enable modules
+        echo "Configuring modules."
+        backup_file $MODULES_FILE
+        # add "lirc_dev" and "lirc_rpi gpio_in_pin=23" to $MODULES_FILE
+        for line in "lirc_dev" "lirc_rpi gpio_in_pin=23"; do
+            if ! grep -q "$line" $MODULES_FILE; then
+                echo "$line" >> $MODULES_FILE
+            fi
+        done
+    else
+        # new way to enable IR (kernel v3.18+)
+        line="dtoverlay=lirc-rpi,gpio_in_pin=23,gpio_in_pull=high"
+        backup_file $BOOTCONFIG
+        if ! grep -q "$line" $BOOTCONFIG; then
+            echo "$line" >> $BOOTCONFIG
         fi
-    done
+    fi
 }
 
 #=======================================================================

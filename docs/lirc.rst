@@ -47,10 +47,17 @@ You can test that it works with the ``mode2`` program::
 
 If, after pressing some buttons, you get a series of pulse/space lengths then
 your Infrared Receiver is working. To make sure that the module is loaded
-each time you boot, add the following lines to ``/etc/modules``::
+each time you boot you need one of two files depedning on which kernel
+version you are using.
+
+If you're using a kernel older than v3.18 then add the following lines to ``/etc/modules``::
 
     lirc_dev
     lirc_rpi gpio_in_pin=23
+
+If you're using a kernel newer than v3.18 then add the following line to ``/boot/config.txt``::
+
+    dtoverlay=lirc-rpi,gpio_in_pin=23,gpio_in_pull=high
 
 Update ``/etc/lirc/hardware.conf`` to contain the following::
 

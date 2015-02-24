@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.8
+------
+- Updated LIRC setup script so that it works for Kernel >= v3.18.5+
+
 v2.0.7
 ------
 - Fixed bug in sysinfo, using floats instead.
