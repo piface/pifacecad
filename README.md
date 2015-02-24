@@ -9,7 +9,7 @@ Contrast is adjusted with screwdriver + screw by IR node.
 Documentation
 =============
 
-[http://piface.github.io/pifacecad/](http://piface.github.io/pifacecad/)
+[http://pifacecad.readthedocs.org/](http://pifacecad.readthedocs.org/)
 
 You can also find the documentation and some examples installed at:
 
@@ -31,4 +31,4 @@ Test by running the `sysinfo.py` program:
 
     $ python3 /usr/share/doc/python3-pifacecad/examples/sysinfo.py
 
-You will need to [configure the IR receiver](http://piface.github.io/pifacecad/lirc.html#setting-up-the-infrared-receiver>`_ yourself).
+You will need to [configure the IR receiver](http://pifacecad.readthedocs.org/en/latest/lirc.html).
