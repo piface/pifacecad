@@ -1,3 +1,4 @@
+#!/bin/bash
 ### BEGIN INIT INFO
 # Provides: pifacecadsysinfo
 # Required-Start:    $remote_fs $syslog
